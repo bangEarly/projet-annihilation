@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using RTS;
 
 public class WorldObject : MonoBehaviour {
 
@@ -12,10 +13,12 @@ public class WorldObject : MonoBehaviour {
 	public bool currentlySelected = false;
 
 	protected Bounds selectionBounds;
+	protected Rect playingArea = new Rect(0.0f, 0.0f, 0.0f, 0.0f);
 
 	protected virtual void Awake()
 	{
-
+		selectionBounds = RessourceManager.InvalidBounds;
+		CalculateBounds ();
 	}
 
 	// Use this for initialization
@@ -32,15 +35,19 @@ public class WorldObject : MonoBehaviour {
 
 	protected virtual void OnGUI()
 	{
-		/*if (currentlySelected) 
+		if (currentlySelected) 
 		{
 			DrawSelection();
-		}*/
+		}
 	}
 
-	public void SetSelection(bool selected)
+	public void SetSelection(bool selected, Rect playingArea)
 	{
 		currentlySelected = selected;
+		if (selected) 
+		{
+			this.playingArea = playingArea;
+		}
 	}
 
 	public string[] GetActions()
@@ -67,28 +74,36 @@ public class WorldObject : MonoBehaviour {
 		
 	private void ChangeSelection(WorldObject worldObject, Player controller) //change la selection du joueur pour l'objet selectionne
 	{
-		SetSelection (false);
+		SetSelection (false, playingArea);
 		if (controller.SelectedObject) 
 		{
-			controller.SelectedObject.SetSelection(false);
+			controller.SelectedObject.SetSelection(false, playingArea);
 			controller.SelectedObject = worldObject;
-			worldObject.SetSelection(true);
+			worldObject.SetSelection(true, controller.hud.GetPlayingArea());
 		}
 	}
 
-	/*private void DrawSelection() //dessine le cercle de selection autour de l'objet selectionne
+	private void DrawSelection() //dessine le cercle de selection autour de l'objet selectionne
 	{
-		GUI.skin = RessourceManager.SelectBoxskin;
+		GUI.skin = RessourceManager.SelectBoxSkin;
 		Rect selectBox = WorkManager.CalculateSelectionBox (selectionBounds, playingArea);
 		GUI.BeginGroup (playingArea);
 		DrawSelectionBox (selectBox);
 		GUI.EndGroup ();
-	}*/
+	}
 
-	/*private void CalculateBounds()
+	private void CalculateBounds()
 	{
 		selectionBounds = new Bounds (transform.position, Vector3.zero);
+		foreach (Renderer r in GetComponentsInChildren< Renderer >() ) 
+		{
+			selectionBounds.Encapsulate(r.bounds);
+		}
+	}
 
-	}*/
+	protected virtual void DrawSelectionBox(Rect selectBox)
+	{
+		GUI.Box (selectBox, "");
+	}
 
 }

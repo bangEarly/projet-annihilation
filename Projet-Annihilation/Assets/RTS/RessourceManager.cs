@@ -23,7 +23,10 @@ namespace RTS {
 		{
 			selectBoxSkin = skin;
 		}
-		}
+		private static Bounds invalidBounds = new Bounds(new Vector3(-9999, -9999, -9999), new Vector3(0, 0, 0));
+		public static Bounds InvalidBounds { get { return invalidBounds; } } 
 	}
+
+}
 
 

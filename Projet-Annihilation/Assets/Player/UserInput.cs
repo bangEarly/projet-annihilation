@@ -34,24 +34,34 @@ public class UserInput : MonoBehaviour
 		float ypos = Input.mousePosition.y;
 		Vector3 movement = new Vector3 (0, 0, 0);
 
+		bool mouseScroll = false;
+
 		//horizontal camera movement
 		if (xpos >= 0 && xpos < RessourceManager.ScrollWidth) 
 		{
-			movement.x -= RessourceManager.ScrollSpeed; 
+			movement.x -= RessourceManager.ScrollSpeed;
+			player.hud.SetCursorState(CursorState.PanLeft);
+			mouseScroll = true;
 		} 
 		else if (xpos > Screen.width - RessourceManager.ScrollWidth && xpos <= Screen.width) 
 		{
 			movement.x += RessourceManager.ScrollSpeed;
+			player.hud.SetCursorState(CursorState.PanRight);
+			mouseScroll = true;
 		}
 
 		//vertical camera movement
 		if (ypos >= 0 && ypos < RessourceManager.ScrollWidth) 
 		{
 			movement.z -= RessourceManager.ScrollSpeed;
+			player.hud.SetCursorState(CursorState.PanDown);
+			mouseScroll = true;
 		}
 		else if (ypos > Screen.height - RessourceManager.ScrollWidth && ypos <= Screen.height)
 		{
 			movement.z += RessourceManager.ScrollSpeed;
+			player.hud.SetCursorState(CursorState.PanUp);
+			mouseScroll = true;
 		}
 
 		movement = Camera.mainCamera.transform.TransformDirection (movement);
@@ -81,6 +91,11 @@ public class UserInput : MonoBehaviour
 		if (destination != origin)
 		{
 			Camera.mainCamera.transform.position = Vector3.MoveTowards(origin, destination, Time.deltaTime * RessourceManager.ScrollSpeed);
+		}
+
+		if (!mouseScroll) 
+		{
+			player.hud.SetCursorState(CursorState.Select);
 		}
 
 	}
@@ -150,7 +165,7 @@ public class UserInput : MonoBehaviour
 					if (worldObject)
 					{
 						player.SelectedObject = worldObject;
-						worldObject.SetSelection(true);
+						worldObject.SetSelection(true, player.hud.GetPlayingArea());
 					}
 				}
 			}
@@ -161,7 +176,7 @@ public class UserInput : MonoBehaviour
 	{
 		if (player.hud.MouseInBounds () && player.SelectedObject) 
 		{
-			player.SelectedObject.SetSelection(false);
+			player.SelectedObject.SetSelection(false, player.hud.GetPlayingArea());
 			player.SelectedObject = null;
 		}
 	}
