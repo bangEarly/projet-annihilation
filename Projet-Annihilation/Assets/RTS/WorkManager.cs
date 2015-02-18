@@ -19,14 +19,14 @@ namespace RTS {
 
 			//coordonee d'ecran pour les coin des limites de la selection
 			List< Vector3 > corners = new List< Vector3 > ();
-			corners.Add (Camera.mainCamera.WorldToScreenPoint (new Vector3 (cx + ex, cy + ey, cz + ez)));
-			corners.Add (Camera.mainCamera.WorldToScreenPoint (new Vector3 (cx + ex, cy + ey, cz - ez)));
-			corners.Add (Camera.mainCamera.WorldToScreenPoint (new Vector3 (cx + ex, cy - ey, cz + ez)));
-			corners.Add (Camera.mainCamera.WorldToScreenPoint (new Vector3 (cx - ex, cy + ey, cz - ez)));
-			corners.Add (Camera.mainCamera.WorldToScreenPoint (new Vector3 (cx + ex, cy - ey, cz - ez)));
-			corners.Add (Camera.mainCamera.WorldToScreenPoint (new Vector3 (cx - ex, cy - ey, cz + ez)));
-			corners.Add (Camera.mainCamera.WorldToScreenPoint (new Vector3 (cx - ex, cy + ey, cz - ez)));
-			corners.Add (Camera.mainCamera.WorldToScreenPoint (new Vector3 (cx - ex, cy - ey, cz - ez)));
+			corners.Add (Camera.main.WorldToScreenPoint (new Vector3 (cx + ex, cy + ey, cz + ez)));
+			corners.Add (Camera.main.WorldToScreenPoint (new Vector3 (cx + ex, cy + ey, cz - ez)));
+			corners.Add (Camera.main.WorldToScreenPoint (new Vector3 (cx + ex, cy - ey, cz + ez)));
+			corners.Add (Camera.main.WorldToScreenPoint (new Vector3 (cx - ex, cy + ey, cz - ez)));
+			corners.Add (Camera.main.WorldToScreenPoint (new Vector3 (cx + ex, cy - ey, cz - ez)));
+			corners.Add (Camera.main.WorldToScreenPoint (new Vector3 (cx - ex, cy - ey, cz + ez)));
+			corners.Add (Camera.main.WorldToScreenPoint (new Vector3 (cx - ex, cy + ey, cz - ez)));
+			corners.Add (Camera.main.WorldToScreenPoint (new Vector3 (cx - ex, cy - ey, cz - ez)));
 
 			//recherche des bords a l'ecran pour les bords de la selection
 			Bounds screenBounds = new Bounds (corners [0], Vector3.zero);

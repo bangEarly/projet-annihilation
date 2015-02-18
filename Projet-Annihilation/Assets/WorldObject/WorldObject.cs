@@ -64,7 +64,7 @@ public class WorldObject : MonoBehaviour {
 	{
 		if (currentlySelected && hitObject && hitObject.name != "Ground") 
 		{
-			WorldObject worldObject = hitObject.transform.root.GetComponentInChildren< WorldObject >();
+			WorldObject worldObject = hitObject.transform.parent.GetComponentInChildren< WorldObject >();
 			if (worldObject)
 			{
 				ChangeSelection(worldObject, controlleur);
@@ -92,7 +92,7 @@ public class WorldObject : MonoBehaviour {
 		GUI.EndGroup ();
 	}
 
-	private void CalculateBounds()
+	protected void CalculateBounds()
 	{
 		selectionBounds = new Bounds (transform.position, Vector3.zero);
 		foreach (Renderer r in GetComponentsInChildren< Renderer >() ) 
@@ -104,6 +104,17 @@ public class WorldObject : MonoBehaviour {
 	protected virtual void DrawSelectionBox(Rect selectBox)
 	{
 		GUI.Box (selectBox, "");
+	}
+
+	public virtual void SetHoverState(GameObject hoverObject)
+	{
+		if (player && player.human && currentlySelected) 
+		{
+			if (hoverObject.name == "Ground")
+			{
+				player.hud.SetCursorState(CursorState.Select);
+			}
+		}
 	}
 
 }
