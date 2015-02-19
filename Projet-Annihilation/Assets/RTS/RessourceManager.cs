@@ -2,6 +2,11 @@
 using System.Collections;
  
 namespace RTS {
+	/// <summary>
+	/// Ressource manager est la classe qui contient toutes les constantes
+	/// necessaires fonctionnement du jeu, elles peuvent ainsi etre modifies
+	/// plus aisement.
+	/// </summary>
 	public static class RessourceManager {
 
 		//variables camera

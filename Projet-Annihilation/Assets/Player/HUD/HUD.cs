@@ -128,19 +128,30 @@ public class HUD : MonoBehaviour {
 		float leftPos = Input.mousePosition.x;
 		float topPos = Screen.height - Input.mousePosition.y;
 
-		if (activeCursorState == CursorState.PanRight) 
+		if (activeCursorState == CursorState.PanLeft || activeCursorState == CursorState.PanRight) 
 		{
-			leftPos = Screen.width - activeCursor.width; // sinon le curseur s'affiche en dehors de l'ecran (a droite)
-		}
-		else if (activeCursorState == CursorState.PanDown) 
-		{
-			topPos = Screen.height - activeCursor.height; //sinon il s'affiche en dessous de l'ecran 
+			topPos -= activeCursor.height / 2;
+			if (activeCursorState == CursorState.PanRight) 
+			{
+				leftPos = Screen.width - activeCursor.width; // sinon le curseur s'affiche en dehors de l'ecran (a droite)
+			}
 		} 
+
+		else if (activeCursorState == CursorState.PanUp || activeCursorState == CursorState.PanDown) 
+		{
+			leftPos -= activeCursor.width / 2;
+			if (activeCursorState == CursorState.PanDown) 
+			{
+				topPos = Screen.height - activeCursor.height; //sinon il s'affiche en dessous de l'ecran 
+			}
+		}
+
 		else if (activeCursorState == CursorState.Move || activeCursorState == CursorState.Select || activeCursorState == CursorState.Harvest) 
 		{
 			topPos -= activeCursor.height / 2; //correction du placement
 			leftPos -= activeCursor.width / 2;
 		}
+
 		return new Rect(leftPos, topPos, activeCursor.width, activeCursor.height);
 	}
 
