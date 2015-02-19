@@ -11,7 +11,7 @@ public class Player : MonoBehaviour {
 	public WorldObject SelectedObject { get; set; }
 
 	//ressources
-	public int startRessource1, startRessource1Limit, startPower, startPowerLimit;
+	public int startCrystalite, startCrystaliteLimit, startDilithium, startDilithiudLimit,startPower, startPowerLimit;
 	private Dictionary< ResourceType, int> resources, resourceLimits;
 
 
@@ -32,16 +32,21 @@ public class Player : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void Update () 
+	{
+		if (human) 
+		{
+			hud.SetResourcesValues(resources, resourceLimits);
+		}
 	}
 
 	private Dictionary<ResourceType, int> InitResourceList()
 	{
-				Dictionary<ResourceType, int> list = new Dictionary<ResourceType, int> ();
-				list.Add (ResourceType.Ressource1, 0);
-				list.Add (ResourceType.Power, 0);
-				return list;
+		Dictionary<ResourceType, int> list = new Dictionary<ResourceType, int> ();
+		list.Add (ResourceType.Crystalite, 0);
+		list.Add (ResourceType.Dilithium, 0);
+		list.Add (ResourceType.Power, 0);
+		return list;
 	}
 
 	public void AddResource(ResourceType type, int amount)
@@ -56,13 +61,15 @@ public class Player : MonoBehaviour {
 
 	private void AddStartResourceLimits()
 	{
-		IncrementResourceLimit (ResourceType.Ressource1, startRessource1Limit);
+		IncrementResourceLimit (ResourceType.Crystalite, startCrystaliteLimit);
+		IncrementResourceLimit (ResourceType.Dilithium, startDilithiudLimit);
 		IncrementResourceLimit (ResourceType.Power, startPowerLimit);
 	}
 
 	private void AddStartResources()
 	{
-		AddResource (ResourceType.Ressource1, startRessource1);
+		AddResource (ResourceType.Crystalite, startCrystalite);
+		AddResource (ResourceType.Dilithium, startDilithium);
 		AddResource (ResourceType.Power, startPower);
 	}
 

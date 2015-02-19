@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using RTS;
+using System.Collections.Generic;
 
 public class HUD : MonoBehaviour {
 
@@ -22,13 +23,46 @@ public class HUD : MonoBehaviour {
 	private CursorState activeCursorState;
 	private int currentFrame = 0; 
 
+	//Resources
+	private Dictionary<ResourceType, int> resourceValues, resourceLimits;
+	private const int ICON_WIDTH = 32, ICON_HEIGHT = 32, TEXT_WIDTH = 128, TEXT_HEIGHT = 32;
+	public Texture2D[] resources;
+	private Dictionary<ResourceType, Texture2D> resourceImages;
+
 	// Use this for initialization
 	void Start () 
 	{
 		player = transform.root.GetComponent< Player> ();
 		RessourceManager.StoreSelectBoxItems(selectBoxSkin);
 		SetCursorState (CursorState.Select);
+		resourceValues = new Dictionary<ResourceType, int> ();
+		resourceLimits = new Dictionary<ResourceType, int> ();
+		resourceImages = new Dictionary<ResourceType, Texture2D> ();
+		for (int i = 0; i < resources.Length; i++) 
+		{
+			switch (resources[i].name) 
+			{
+			case "Crystalite" :
+				resourceImages.Add(ResourceType.Crystalite, resources[i]);
+				resourceValues.Add(ResourceType.Crystalite, 0);
+				resourceLimits.Add(ResourceType.Crystalite, 0);
+				break;
+			case "Dilithium" :
+				resourceImages.Add(ResourceType.Dilithium, resources[i]);
+				resourceValues.Add(ResourceType.Dilithium, 0);
+				resourceLimits.Add(ResourceType.Dilithium, 0);
+				break;
 
+			case "Power" :
+				resourceImages.Add(ResourceType.Power, resources[i]);
+				resourceValues.Add(ResourceType.Power, 0);
+				resourceLimits.Add(ResourceType.Power, 0);
+				break;
+			default :
+				break;
+			}
+
+		}
 	}
 	
 	// Update is called once per frame
@@ -47,6 +81,14 @@ public class HUD : MonoBehaviour {
 		GUI.skin = ResourceSkin;
 		GUI.BeginGroup(new Rect(0, 0, Screen.width, RESOURCE_BAR_HEIGHT));
 		GUI.Box (new Rect (0, 0, Screen.width, RESOURCE_BAR_HEIGHT), "");
+		int topPos = 4, iconLeft = 4, textLeft = 20;
+		DrawResourceIcon (ResourceType.Crystalite, iconLeft, textLeft, topPos, true);
+		iconLeft += TEXT_WIDTH;
+		textLeft += TEXT_WIDTH;
+		DrawResourceIcon (ResourceType.Dilithium, iconLeft, textLeft, topPos, true);
+		iconLeft += TEXT_WIDTH;
+		textLeft += TEXT_HEIGHT;
+		DrawResourceIcon (ResourceType.Power, iconLeft, textLeft, topPos, false);
 		GUI.EndGroup ();
 	}
 
@@ -192,7 +234,23 @@ public class HUD : MonoBehaviour {
 		}
 	}
 
+	public void SetResourcesValues(Dictionary<ResourceType, int> resourceValues, Dictionary<ResourceType, int> resourceLimits)
+	{
+		this.resourceValues = resourceValues;
+		this.resourceLimits = resourceLimits;
+	}
 
+	private void DrawResourceIcon(ResourceType type, int iconLeft, int textLeft, int topPos, bool display_limit)
+	{
+		Texture2D icon = resourceImages [type];
+		string text = resourceValues [type].ToString ();
+		if (display_limit) 
+		{
+			text += "/" + resourceLimits[type].ToString();
+		}
+		GUI.DrawTexture (new Rect (iconLeft, topPos, ICON_WIDTH, ICON_HEIGHT), icon);
+		GUI.Label (new Rect (textLeft, topPos, TEXT_WIDTH, TEXT_HEIGHT), text);
+	}
 
 }
 
