@@ -24,7 +24,7 @@ public class WorldObject : MonoBehaviour {
 	// Use this for initialization
 	protected virtual void Start () 
 	{
-		player = transform.root.GetComponentInChildren< Player > ();
+		player = transform.root.GetComponent/*InChildren*/< Player > ();
 	
 	}
 	
@@ -64,7 +64,7 @@ public class WorldObject : MonoBehaviour {
 	{
 		if (currentlySelected && hitObject && hitObject.name != "Ground") 
 		{
-			WorldObject worldObject = hitObject.transform.parent.GetComponentInChildren< WorldObject >();
+			WorldObject worldObject = hitObject.transform.parent.GetComponent< WorldObject >();
 			if (worldObject)
 			{
 				ChangeSelection(worldObject, controlleur);
@@ -114,6 +114,18 @@ public class WorldObject : MonoBehaviour {
 			{
 				player.hud.SetCursorState(CursorState.Select);
 			}
+		}
+	}
+
+	public bool IsOwnedBy(Player owner)
+	{
+		if (player && player.Equals (owner))
+		{
+			return true;
+		} 
+		else 
+		{
+			return false;
 		}
 	}
 

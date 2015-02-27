@@ -23,7 +23,7 @@ public class UserInput : MonoBehaviour
 		if (player.human) 
 		{
 			MoveCamera();
-			//RotateCamera(); rotation a faire plus tard, pas tres urgent
+			RotateCamera(); //rotation a faire plus tard, pas tres urgent
 			MouseActivity(); 
 		}
 	}
@@ -100,10 +100,23 @@ public class UserInput : MonoBehaviour
 
 	}
 	
-	/*private void RotateCamera()
+	private void RotateCamera()
 	{
+		Vector3 origin = Camera.main.transform.eulerAngles;
+		Vector3 destination = origin;
 
-	}*/
+		if ((Input.GetKey (KeyCode.LeftAlt) || Input.GetKey (KeyCode.RightAlt)) && Input.GetMouseButton(1)) 
+		{
+			destination.x -= Input.GetAxis("Mouse Y");
+			destination.y += Input.GetAxis("Mouse X");
+		}
+
+		if (destination != origin) 
+		{
+			Camera.main.transform.eulerAngles = Vector3.MoveTowards(origin, destination, 45);
+		}
+
+	}
 
 	private void MouseActivity() //check if the player clicked
 	{

@@ -52,8 +52,13 @@
      <Compile Include="Assets\RTS\Enums.cs" />
      <Compile Include="Assets\RTS\RessourceManager.cs" />
      <Compile Include="Assets\RTS\WorkManager.cs" />
+     <Compile Include="Assets\Resources\GameObjectList.cs" />
      <Compile Include="Assets\WorldObject\Building\Building.cs" />
+     <Compile Include="Assets\WorldObject\Building\Buildings.cs" />
+     <Compile Include="Assets\WorldObject\Building\WarFactory\WarFactory.cs" />
+     <Compile Include="Assets\WorldObject\Units\Tank\Tank.cs" />
      <Compile Include="Assets\WorldObject\Units\Unit.cs" />
+     <Compile Include="Assets\WorldObject\Units\Units.cs" />
      <Compile Include="Assets\WorldObject\WorldObject.cs" />
      <Compile Include="Assets\_Scripts\Language\DontDestroyOnLoad_TitleScreen.cs" />
      <Compile Include="Assets\_Scripts\Language\Language.cs" />

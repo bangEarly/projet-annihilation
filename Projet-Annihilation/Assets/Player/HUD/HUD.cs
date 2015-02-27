@@ -7,7 +7,7 @@ public class HUD : MonoBehaviour {
 
 	//resource bar and orders bar display
 	public GUISkin ResourceSkin, OrdersSkin, selectBoxSkin;
-	private const float ORDERS_BAR_WIDTH = 150, RESOURCE_BAR_HEIGHT = 40;
+	private const int ORDERS_BAR_WIDTH = 150, RESOURCE_BAR_HEIGHT = 40;
 
 	//infos on the selection
 	private const int SELECTION_NAME_HEIGHT = 15;
@@ -28,6 +28,17 @@ public class HUD : MonoBehaviour {
 	private const int ICON_WIDTH = 32, ICON_HEIGHT = 32, TEXT_WIDTH = 128, TEXT_HEIGHT = 32;
 	public Texture2D[] resources;
 	private Dictionary<ResourceType, Texture2D> resourceImages;
+
+	//affichage des actions
+	private WorldObject lastSelection;
+	private float sliderValue;
+	public Texture2D buttonHover, buttonClick;
+	private const int BUILD_IMAGE_WIDTH = 64, BUILD_IMAGE_HEIGHT = 64, BUTTON_SPACING = 7, SCROLL_BAR_WIDTH = 22;
+	private int buildAreaHeight = 0;
+
+	//affichage de la file de construction
+	private const int BUILD_IMAGE_PADDING = 8;
+	public Texture2D buildFrame, buildMask;
 
 	// Use this for initialization
 	void Start () 
@@ -63,6 +74,8 @@ public class HUD : MonoBehaviour {
 			}
 
 		}
+		buildAreaHeight = Screen.height - RESOURCE_BAR_HEIGHT - SELECTION_NAME_HEIGHT - 2 * BUTTON_SPACING;
+
 	}
 	
 	// Update is called once per frame
@@ -87,7 +100,7 @@ public class HUD : MonoBehaviour {
 		textLeft += TEXT_WIDTH;
 		DrawResourceIcon (ResourceType.Dilithium, iconLeft, textLeft, topPos, true);
 		iconLeft += TEXT_WIDTH;
-		textLeft += TEXT_HEIGHT;
+		textLeft += TEXT_WIDTH;
 		DrawResourceIcon (ResourceType.Power, iconLeft, textLeft, topPos, false);
 		GUI.EndGroup ();
 	}
@@ -95,19 +108,38 @@ public class HUD : MonoBehaviour {
 	private void DrawOrdersBar ()
 	{
 		GUI.skin = OrdersSkin;
-		GUI.BeginGroup (new Rect (Screen.width - ORDERS_BAR_WIDTH, RESOURCE_BAR_HEIGHT, ORDERS_BAR_WIDTH, Screen.height - RESOURCE_BAR_HEIGHT));
-		GUI.Box (new Rect (0, 0, ORDERS_BAR_WIDTH, Screen.height - RESOURCE_BAR_HEIGHT), "");
+		GUI.BeginGroup (new Rect (Screen.width - ORDERS_BAR_WIDTH - BUILD_IMAGE_WIDTH, RESOURCE_BAR_HEIGHT, ORDERS_BAR_WIDTH + BUILD_IMAGE_WIDTH, Screen.height - RESOURCE_BAR_HEIGHT));
+		GUI.Box (new Rect (BUILD_IMAGE_WIDTH + SCROLL_BAR_WIDTH, 0, ORDERS_BAR_WIDTH, Screen.height - RESOURCE_BAR_HEIGHT), "");
 
 		string selectionName = "";
+
 		if (player.SelectedObject) 
 		{
 			selectionName = player.SelectedObject.objectName;
-		}
-		if (!selectionName.Equals (""))
-		{
-			GUI.Label(new Rect(0, 10, ORDERS_BAR_WIDTH, SELECTION_NAME_HEIGHT), selectionName);
-		}
 
+			if (player.SelectedObject.IsOwnedBy (player)) 
+			{
+				if (lastSelection && lastSelection != player.SelectedObject) 
+				{
+					sliderValue = 0.0f;
+				}
+
+				DrawActions (player.SelectedObject.GetActions ());
+				lastSelection = player.SelectedObject;
+				Building selectedBuilding = lastSelection.GetComponent< Building >();
+				if (selectedBuilding)
+				{
+					DrawbuildQueue(selectedBuilding.getBuildQueueValues(), selectedBuilding.getBuildPercentage()); 
+				}
+			}
+			if (!selectionName.Equals ("")) 
+			{
+				int leftPos = BUILD_IMAGE_WIDTH + SCROLL_BAR_WIDTH / 2;
+				int topPos = buildAreaHeight + BUTTON_SPACING;
+				GUI.Label (new Rect (leftPos, topPos, ORDERS_BAR_WIDTH, SELECTION_NAME_HEIGHT), selectionName);
+			}
+
+		}
 		GUI.EndGroup ();
 	}
 
@@ -250,6 +282,83 @@ public class HUD : MonoBehaviour {
 		}
 		GUI.DrawTexture (new Rect (iconLeft, topPos, ICON_WIDTH, ICON_HEIGHT), icon);
 		GUI.Label (new Rect (textLeft, topPos, TEXT_WIDTH, TEXT_HEIGHT), text);
+	}
+
+	private void DrawActions(string[] actions)
+	{
+		GUIStyle buttons = new GUIStyle();
+		buttons.hover.background = buttonHover;
+		buttons.active.background = buttonClick;
+		GUI.skin.button = buttons;
+		int numActions = actions.Length;
+		GUI.BeginGroup(new Rect(BUILD_IMAGE_WIDTH, 0, ORDERS_BAR_WIDTH, buildAreaHeight));
+
+		if (numActions >= MaxNumRows (buildAreaHeight))
+		{
+			DrawSlider (buildAreaHeight, numActions / 2.0f);
+		}
+
+		for (int i = 0; i < numActions; i++) 
+		{
+			int column = i % 2;
+			int row = i / 2;
+			Rect pos = GetButtonPos (row, column);
+			Texture2D action = RessourceManager.GetBuildImage(actions[i]);
+			if (action)
+			{
+				if (GUI.Button(pos, action))
+				{
+					if (player.SelectedObject)
+					{
+						player.SelectedObject.PerformAction(actions[i]);
+					}
+				}
+			}
+		}
+		GUI.EndGroup();
+
+	}
+
+	private int MaxNumRows (int areaHeight)
+	{
+		return areaHeight / BUILD_IMAGE_HEIGHT;
+	}
+
+	private Rect GetButtonPos(int row, int column)
+	{
+		int left = SCROLL_BAR_WIDTH + column * BUILD_IMAGE_WIDTH;
+		float top = row * BUILD_IMAGE_HEIGHT - sliderValue * BUILD_IMAGE_HEIGHT;
+		return new Rect (left, top, BUILD_IMAGE_WIDTH, BUILD_IMAGE_HEIGHT);
+	}
+
+	private void DrawSlider(int groupHeight, float numRows)
+	{
+		sliderValue = GUI.VerticalSlider (GetScrollPos (groupHeight), sliderValue, 0.0f, numRows - MaxNumRows (groupHeight));
+	}
+
+	private Rect GetScrollPos(int groupHeight)
+	{
+		return new Rect (BUTTON_SPACING, BUTTON_SPACING, SCROLL_BAR_WIDTH, groupHeight - 2 * BUTTON_SPACING);
+	}
+
+	private void DrawbuildQueue(string[] buildQueue, float buildPourcentage)
+	{
+		for (int i = 0; i < buildQueue.Length; i++) 
+		{
+			float topPos = i * BUILD_IMAGE_HEIGHT - (i+1) * BUILD_IMAGE_PADDING;
+			Rect buildPos = new Rect(BUILD_IMAGE_PADDING, topPos, BUILD_IMAGE_WIDTH, BUILD_IMAGE_HEIGHT);
+			GUI.DrawTexture(buildPos, RessourceManager.GetBuildImage(buildQueue[i]));
+			GUI.DrawTexture(buildPos, buildFrame);
+			topPos += BUILD_IMAGE_PADDING;
+			float width = BUILD_IMAGE_WIDTH - 2 * BUILD_IMAGE_PADDING;
+			float height = BUILD_IMAGE_HEIGHT - 2 * BUILD_IMAGE_PADDING;
+			if (i == 0)
+			{
+				topPos += height * buildPourcentage;
+				height *= (1 - buildPourcentage);
+			}
+			GUI.DrawTexture(new Rect(2 * BUILD_IMAGE_PADDING, topPos, width, height), buildMask);
+		}
 	}
 
 }
