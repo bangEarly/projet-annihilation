@@ -23,7 +23,7 @@ public class UserInput : MonoBehaviour
 		if (player.human) 
 		{
 			MoveCamera();
-			RotateCamera(); //rotation a faire plus tard, pas tres urgent
+			RotateCamera();
 			MouseActivity(); 
 		}
 	}

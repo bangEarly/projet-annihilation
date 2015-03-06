@@ -84,7 +84,10 @@ public class HUD : MonoBehaviour {
 		if (player && player.human) 
 		{
 			DrawResourceBar ();
-			DrawOrdersBar ();
+			if (player.SelectedObject)
+			{
+				DrawOrdersBar ();
+			}
 		}
 		DrawMouseCursor ();
 	}
@@ -108,38 +111,36 @@ public class HUD : MonoBehaviour {
 	private void DrawOrdersBar ()
 	{
 		GUI.skin = OrdersSkin;
-		GUI.BeginGroup (new Rect (Screen.width - ORDERS_BAR_WIDTH - BUILD_IMAGE_WIDTH, RESOURCE_BAR_HEIGHT, ORDERS_BAR_WIDTH + BUILD_IMAGE_WIDTH, Screen.height - RESOURCE_BAR_HEIGHT));
-		GUI.Box (new Rect (BUILD_IMAGE_WIDTH + SCROLL_BAR_WIDTH, 0, ORDERS_BAR_WIDTH, Screen.height - RESOURCE_BAR_HEIGHT), "");
+		GUI.BeginGroup(new Rect(Screen.width / 2 - 5, Screen.height - ORDERS_BAR_WIDTH, Screen.width, ORDERS_BAR_WIDTH));
+		GUI.Box (new Rect (0, 0, Screen.width, ORDERS_BAR_WIDTH), "");
 
-		string selectionName = "";
+		string selectionName = player.SelectedObject.objectName;
 
-		if (player.SelectedObject) 
+		if (player.SelectedObject.IsOwnedBy (player)) 
 		{
-			selectionName = player.SelectedObject.objectName;
-
-			if (player.SelectedObject.IsOwnedBy (player)) 
+			if (lastSelection && lastSelection != player.SelectedObject) 
 			{
-				if (lastSelection && lastSelection != player.SelectedObject) 
-				{
-					sliderValue = 0.0f;
-				}
-
-				DrawActions (player.SelectedObject.GetActions ());
-				lastSelection = player.SelectedObject;
-				Building selectedBuilding = lastSelection.GetComponent< Building >();
-				if (selectedBuilding)
-				{
-					DrawbuildQueue(selectedBuilding.getBuildQueueValues(), selectedBuilding.getBuildPercentage()); 
-				}
-			}
-			if (!selectionName.Equals ("")) 
-			{
-				int leftPos = BUILD_IMAGE_WIDTH + SCROLL_BAR_WIDTH / 2;
-				int topPos = buildAreaHeight + BUTTON_SPACING;
-				GUI.Label (new Rect (leftPos, topPos, ORDERS_BAR_WIDTH, SELECTION_NAME_HEIGHT), selectionName);
+				sliderValue = 0.0f;
 			}
 
+			DrawActions (player.SelectedObject.GetActions ());
+			lastSelection = player.SelectedObject;
+			Building selectedBuilding = lastSelection.GetComponent< Building > ();
+			if (selectedBuilding) 
+			{
+				DrawbuildQueue (selectedBuilding.getBuildQueueValues (), selectedBuilding.getBuildPercentage ()); 
+			}
 		}
+
+		if (!selectionName.Equals ("")) 
+		{
+			int leftPos = BUILD_IMAGE_WIDTH + SCROLL_BAR_WIDTH / 2;
+			int topPos = buildAreaHeight + BUTTON_SPACING;
+			GUI.Label (new Rect (0, 0, 128, SELECTION_NAME_HEIGHT), selectionName);
+			GUI.DrawTexture(new Rect(0, SELECTION_NAME_HEIGHT, 128, 128), buildFrame);
+			GUI.DrawTexture(new Rect(0, SELECTION_NAME_HEIGHT, 128, 128), RessourceManager.GetBuildImage(player.SelectedObject.objectName));
+		}
+
 		GUI.EndGroup ();
 	}
 
@@ -147,20 +148,40 @@ public class HUD : MonoBehaviour {
 	public bool MouseInBounds() //verifie que le clique n'est pas dans le HUD
 	{
 		Vector3 mousePos = Input.mousePosition;
-		bool insideWidth = mousePos.x >= 0 && mousePos.x <= Screen.width - ORDERS_BAR_WIDTH;
-		bool insideHeight = mousePos.y >= 0 && mousePos.y <= Screen.height - RESOURCE_BAR_HEIGHT;
+		bool insideHeight;
+		bool insideWidth;
+
+		if (player.SelectedObject) 
+		{
+			if(mousePos.y >= ORDERS_BAR_WIDTH && mousePos.y <= Screen.height - RESOURCE_BAR_HEIGHT)
+			{
+				insideHeight = true;
+				insideWidth = mousePos.x >= 0 && mousePos.x <= Screen.width;
+			}
+			else 
+			{
+				insideHeight = true;
+				insideWidth = mousePos.x >= 0 && mousePos.x <= Screen.width / 2;
+			}
+		} 
+
+		else 
+		{
+			insideHeight = mousePos.y >= 0 && mousePos.y <= Screen.height - RESOURCE_BAR_HEIGHT;
+			insideWidth = mousePos.x >= 0 && mousePos.x <= Screen.width;
+		}
 		return insideHeight && insideWidth;
 	}
 
 	public Rect GetPlayingArea () //get the playing area for the selection box
 	{								//les coordonnee partent du point en haut a gauche de l'ecran
-		return new Rect (0, RESOURCE_BAR_HEIGHT, Screen.width - ORDERS_BAR_WIDTH, Screen.height - RESOURCE_BAR_HEIGHT);
+		return new Rect (0, RESOURCE_BAR_HEIGHT, Screen.width, Screen.height - RESOURCE_BAR_HEIGHT );
 	}
 
 
 	public void DrawMouseCursor()
 	{
-		bool mouseOverHUD = !MouseInBounds () && activeCursorState != CursorState.PanRight && activeCursorState != CursorState.PanUp;
+		bool mouseOverHUD = !MouseInBounds () && activeCursorState != CursorState.PanDown && activeCursorState != CursorState.PanUp && activeCursorState != CursorState.PanRight;
 
 		if (mouseOverHUD) 
 		{
@@ -291,7 +312,7 @@ public class HUD : MonoBehaviour {
 		buttons.active.background = buttonClick;
 		GUI.skin.button = buttons;
 		int numActions = actions.Length;
-		GUI.BeginGroup(new Rect(BUILD_IMAGE_WIDTH, 0, ORDERS_BAR_WIDTH, buildAreaHeight));
+		GUI.BeginGroup(new Rect(Screen.width / 4, 0, BUILD_IMAGE_WIDTH * 4, buildAreaHeight));
 
 		if (numActions >= MaxNumRows (buildAreaHeight))
 		{
@@ -300,8 +321,8 @@ public class HUD : MonoBehaviour {
 
 		for (int i = 0; i < numActions; i++) 
 		{
-			int column = i % 2;
-			int row = i / 2;
+			int column = i % 3;
+			int row = i / 3;
 			Rect pos = GetButtonPos (row, column);
 			Texture2D action = RessourceManager.GetBuildImage(actions[i]);
 			if (action)
@@ -345,8 +366,8 @@ public class HUD : MonoBehaviour {
 	{
 		for (int i = 0; i < buildQueue.Length; i++) 
 		{
-			float topPos = i * BUILD_IMAGE_HEIGHT - (i+1) * BUILD_IMAGE_PADDING;
-			Rect buildPos = new Rect(BUILD_IMAGE_PADDING, topPos, BUILD_IMAGE_WIDTH, BUILD_IMAGE_HEIGHT);
+			float topPos = i * BUILD_IMAGE_HEIGHT - (i+1) * BUILD_IMAGE_PADDING + BUILD_IMAGE_PADDING;
+			Rect buildPos = new Rect(128, topPos, BUILD_IMAGE_WIDTH, BUILD_IMAGE_HEIGHT);
 			GUI.DrawTexture(buildPos, RessourceManager.GetBuildImage(buildQueue[i]));
 			GUI.DrawTexture(buildPos, buildFrame);
 			topPos += BUILD_IMAGE_PADDING;
@@ -357,7 +378,7 @@ public class HUD : MonoBehaviour {
 				topPos += height * buildPourcentage;
 				height *= (1 - buildPourcentage);
 			}
-			GUI.DrawTexture(new Rect(2 * BUILD_IMAGE_PADDING, topPos, width, height), buildMask);
+			GUI.DrawTexture(new Rect(128 + BUILD_IMAGE_PADDING, topPos, width, height), buildMask);
 		}
 	}
 

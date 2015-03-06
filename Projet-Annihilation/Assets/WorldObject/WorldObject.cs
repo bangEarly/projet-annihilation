@@ -110,7 +110,7 @@ public class WorldObject : MonoBehaviour {
 	{
 		if (player && player.human && currentlySelected) 
 		{
-			if (hoverObject.name == "Ground")
+			if (hoverObject.name != "Ground")
 			{
 				player.hud.SetCursorState(CursorState.Select);
 			}

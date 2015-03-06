@@ -80,6 +80,7 @@ public class GameObjectList : MonoBehaviour {
 
 	public Texture2D GetBuildImage(string name)
 	{
+		name = name.Replace (" ", "");
 		for (int i = 0; i < buildings.Length; i++) 
 		{
 			Building building = buildings[i].GetComponent< Building >();
