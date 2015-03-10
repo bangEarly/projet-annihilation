@@ -136,9 +136,9 @@ public class HUD : MonoBehaviour {
 		{
 			int leftPos = BUILD_IMAGE_WIDTH + SCROLL_BAR_WIDTH / 2;
 			int topPos = buildAreaHeight + BUTTON_SPACING;
-			GUI.Label (new Rect (0, 0, 128, SELECTION_NAME_HEIGHT), selectionName);
+			GUI.Label (new Rect (0, 10, 128, SELECTION_NAME_HEIGHT), selectionName);
 			GUI.DrawTexture(new Rect(0, SELECTION_NAME_HEIGHT, 128, 128), buildFrame);
-			GUI.DrawTexture(new Rect(0, SELECTION_NAME_HEIGHT, 128, 128), RessourceManager.GetBuildImage(player.SelectedObject.objectName));
+			GUI.DrawTexture(new Rect(0, SELECTION_NAME_HEIGHT, 128, 128), player.SelectedObject.buildImage);
 		}
 
 		GUI.EndGroup ();
