@@ -53,55 +53,21 @@
      <Compile Include="Assets\RTS\RessourceManager.cs" />
      <Compile Include="Assets\RTS\WorkManager.cs" />
      <Compile Include="Assets\Resources\GameObjectList.cs" />
-     <Compile Include="Assets\WorldObject\Building\Building.cs" />
-     <Compile Include="Assets\WorldObject\Building\Buildings.cs" />
-     <Compile Include="Assets\WorldObject\Building\QG_robot\QG_robot.cs" />
-     <Compile Include="Assets\WorldObject\Building\WarFactory\WarFactory.cs" />
-     <Compile Include="Assets\WorldObject\Units\Tank\Tank.cs" />
-     <Compile Include="Assets\WorldObject\Units\Unit.cs" />
-     <Compile Include="Assets\WorldObject\Units\Units.cs" />
-     <Compile Include="Assets\WorldObject\WorldObject.cs" />
+     <Compile Include="Assets\WorldObjects\Buildings\Building.cs" />
+     <Compile Include="Assets\WorldObjects\Buildings\Buildings.cs" />
+     <Compile Include="Assets\WorldObjects\Buildings\QG_robot\QG_robot.cs" />
+     <Compile Include="Assets\WorldObjects\Buildings\WarFactory\WarFactory.cs" />
+     <Compile Include="Assets\WorldObjects\Units\Tank\Tank.cs" />
+     <Compile Include="Assets\WorldObjects\Units\Unit.cs" />
+     <Compile Include="Assets\WorldObjects\Units\Units.cs" />
+     <Compile Include="Assets\WorldObjects\WorldObject.cs" />
      <Compile Include="Assets\_Scripts\Language\DontDestroyOnLoad_TitleScreen.cs" />
      <Compile Include="Assets\_Scripts\Language\Language.cs" />
      <Compile Include="Assets\_Scripts\Language\Language_Title_Screen_Scene.cs" />
-     <Compile Include="Assets\_Scripts\Scene 0\Opacity.cs" />
-     <Compile Include="Assets\_Scripts\Scene 1\BlackScreenTimer.cs" />
-     <Compile Include="Assets\_Scripts\Scene 1\Camera_rotation.cs" />
-     <Compile Include="Assets\_Scripts\Scene 1\ui.cs" />
-     <Compile Include="Assets\_Scripts\Scene test\SlideShow.cs" />
-     <Compile Include="Assets\_Scripts\Sounds\MyUnitySingleton.cs" />
-     <Compile Include="Assets\_Scripts\Transitions\Scene1toScene2.cs" />
      <Compile Include="Assets\_Scripts\gotodemo.cs" />
-     <None Include="Assets\Standard Assets\Projectors\Guidelines.txt" />
-     <None Include="Assets\Standard Assets (Mobile)\Shaders\Particle Shaders\Mobile Multiply Culled.shader" />
-     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Basic.shader" />
-     <None Include="Assets\Standard Assets (Mobile)\Shaders\Miscellaneous Shaders\Mobile Background.shader" />
-     <None Include="Assets\Standard Assets\Projectors\Sources\Shaders\Projector Multiply.shader" />
-     <None Include="Assets\Standard Assets (Mobile)\Shaders\Vertex Colored Shaders\Mobile Transparent Vertex Color.shader" />
-     <None Include="Assets\Standard Assets\Tessellation Shaders\BumpedSpecularSmooth.shader" />
-     <None Include="Assets\Standard Assets (Mobile)\Shaders\Miscellaneous Shaders\Mobile Detail.shader" />
-     <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
-     <None Include="Assets\Standard Assets\Skyboxes\_skybox info.txt" />
-     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-BasicOutline.shader" />
-     <None Include="Assets\Standard Assets\Projectors\Sources\Shaders\Projector Light.shader" />
-     <None Include="Assets\Standard Assets\Water (Basic)\Sources\Shaders\FX-Water Simple.shader" />
-     <None Include="Assets\Standard Assets (Mobile)\Shaders\Lightmap Shaders (Legacy)\Mobile Lightmap Reflective.shader" />
-     <None Include="Assets\Standard Assets (Mobile)\Shaders\Particle Shaders\Mobile Particles Additive Culled.shader" />
-     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-LightedOutline.shader" />
-     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Lighted.shader" />
-     <None Include="Assets\Standard Assets (Mobile)\Shaders\Vertex Colored Shaders\Mobile Vertex Colored.shader" />
-     <None Include="Assets\Standard Assets (Mobile)\Shaders\Lightmap Shaders (Legacy)\Mobile Lightmap Only.shader" />
-     <None Include="Assets\Standard Assets (Mobile)\Shaders\Lightmap Shaders (Legacy)\Mobile Lightmap AlphaTest.shader" />
-     <None Include="Assets\Standard Assets\Tessellation Shaders\BumpedSpecularDisplacement.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
  </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{92C80E84-CA68-FA4E-1E55-EF0AEB134B56}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
-    <ProjectReference Include="Assembly-UnityScript-firstpass.unityproj">
-      <Project>{D51504F2-9DB1-6E9D-9086-6D18BC8CF5DA}</Project>      <Name>Assembly-UnityScript-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
