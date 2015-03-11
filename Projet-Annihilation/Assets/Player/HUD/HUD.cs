@@ -153,7 +153,13 @@ public class HUD : MonoBehaviour {
 
 		if (player.SelectedObject) 
 		{
-			if(mousePos.y >= ORDERS_BAR_WIDTH && mousePos.y <= Screen.height - RESOURCE_BAR_HEIGHT)
+			if (mousePos.y >= Screen.height - RESOURCE_BAR_HEIGHT)
+			{
+				insideHeight = false;
+				insideWidth = false;
+			}
+
+			else if(mousePos.y >= ORDERS_BAR_WIDTH && mousePos.y <= Screen.height - RESOURCE_BAR_HEIGHT)
 			{
 				insideHeight = true;
 				insideWidth = mousePos.x >= 0 && mousePos.x <= Screen.width;
