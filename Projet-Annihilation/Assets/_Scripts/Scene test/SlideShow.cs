@@ -39,7 +39,7 @@ public class SlideShow : MonoBehaviour
             _changeTime = 1/FramePerSec;
             Debug.Log("FPS change time is: " + _changeTime);
 
-            guiTexture.texture = _slides[_currentSlide];
+            GetComponent<GUITexture>().texture = _slides[_currentSlide];
             _currentSlide++;
         }
         else
@@ -50,8 +50,8 @@ public class SlideShow : MonoBehaviour
 
     private void Awake() // THE WORKIN'ONE WOOHA !
     {
-        _textureHeight = guiTexture.texture.height;
-        _textureWidth = guiTexture.texture.width;
+        _textureHeight = GetComponent<GUITexture>().texture.height;
+        _textureWidth = GetComponent<GUITexture>().texture.width;
         _screenHeight = Screen.height;
         _screenWidth = Screen.width;
 
@@ -59,7 +59,7 @@ public class SlideShow : MonoBehaviour
         _yPosition = (_screenHeight - _textureHeight)/2.0f;
         _scaledWidth = Convert.ToInt32(_screenWidth - 2.0f*_xPosition);
         _scaledHeight = Convert.ToInt32(_screenHeight - 2.0f*_yPosition);
-        guiTexture.pixelInset = new Rect(_xPosition, _yPosition, _scaledWidth, _scaledHeight);
+        GetComponent<GUITexture>().pixelInset = new Rect(_xPosition, _yPosition, _scaledWidth, _scaledHeight);
     }
 
     /*
@@ -96,7 +96,7 @@ public class SlideShow : MonoBehaviour
         if (_slides == null) return;
         if (_timeSinceLast > _changeTime && _currentSlide < _slides.Length)
         {
-            guiTexture.texture = _slides[_currentSlide];
+            GetComponent<GUITexture>().texture = _slides[_currentSlide];
             _timeSinceLast = 0.0f;
             _currentSlide++;
         }

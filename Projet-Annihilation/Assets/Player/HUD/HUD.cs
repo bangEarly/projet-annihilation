@@ -191,11 +191,11 @@ public class HUD : MonoBehaviour {
 
 		if (mouseOverHUD) 
 		{
-			Screen.showCursor = true;
+			Cursor.visible = true;
 		} 
 		else 
 		{
-			Screen.showCursor = false;
+			Cursor.visible = false;
 			GUI.skin = mouseCursorSkin;
 			GUI.BeginGroup (new Rect (0, 0, Screen.width, Screen.height));
 			UpdateCursorAnimation ();

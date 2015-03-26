@@ -15,7 +15,7 @@ public class Opacity : MonoBehaviour
     private void Awake()
     {
         _logoOpacity = Logo.color.a;
-        _blackScreenOpacity = BlackScreen.guiTexture.color.a;
+        _blackScreenOpacity = BlackScreen.GetComponent<GUITexture>().color.a;
     }
 
     // Update is called once per frame
@@ -27,7 +27,7 @@ public class Opacity : MonoBehaviour
     private void LateUpdate()
     {
         Logo.color = new Color(_logoOpacity, Logo.color.r, Logo.color.g, Logo.color.b);
-        BlackScreen.guiText.color = new Color(_blackScreenOpacity, BlackScreen.guiText.color.r,
-            BlackScreen.guiText.color.g, BlackScreen.guiText.color.b);
+        BlackScreen.GetComponent<GUIText>().color = new Color(_blackScreenOpacity, BlackScreen.GetComponent<GUIText>().color.r,
+            BlackScreen.GetComponent<GUIText>().color.g, BlackScreen.GetComponent<GUIText>().color.b);
     }
 }

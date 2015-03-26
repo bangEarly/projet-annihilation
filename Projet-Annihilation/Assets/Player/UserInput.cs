@@ -64,14 +64,14 @@ public class UserInput : MonoBehaviour
 			mouseScroll = true;
 		}
 
-		movement = Camera.mainCamera.transform.TransformDirection (movement);
+		movement = Camera.main.transform.TransformDirection (movement);
 		movement.y = 0;
 
 		//away from the ground movement
 		movement.y -= RessourceManager.ScrollSpeed * Input.GetAxis ("Mouse ScrollWheel");
 
 		//calcul of the desirate position (with received input)
-		Vector3 origin = Camera.mainCamera.transform.position;
+		Vector3 origin = Camera.main.transform.position;
 		Vector3 destination = origin;
 		destination.x += movement.x;
 		destination.y += movement.y;
@@ -90,7 +90,7 @@ public class UserInput : MonoBehaviour
 		//make the move
 		if (destination != origin)
 		{
-			Camera.mainCamera.transform.position = Vector3.MoveTowards(origin, destination, Time.deltaTime * RessourceManager.ScrollSpeed);
+			Camera.main.transform.position = Vector3.MoveTowards(origin, destination, Time.deltaTime * RessourceManager.ScrollSpeed);
 		}
 
 		if (!mouseScroll) 
@@ -170,17 +170,27 @@ public class UserInput : MonoBehaviour
 			Vector3 hitPoint = FindHitPoint();
 			if (hitObject && hitPoint != RessourceManager.InvalidPosition)
 			{
-				if (player.SelectedObject)
-				{
-					player.SelectedObject.MouseClick(hitObject, hitPoint, player);
-				}
-				else if (hitObject.name != "Ground")
+
+				if (hitObject.name != "Ground")
 				{
 					WorldObject worldObject = hitObject.transform.parent.GetComponent< WorldObject >();
 					if (worldObject)
 					{
+						if (player.SelectedObject)
+						{
+							player.SelectedObject.SetSelection(false, player.hud.GetPlayingArea());
+							player.SelectedObject = null;
+						}
 						player.SelectedObject = worldObject;
 						worldObject.SetSelection(true, player.hud.GetPlayingArea());
+					}
+				}
+				else
+				{
+					if (player.hud.MouseInBounds () && player.SelectedObject) 
+					{
+						player.SelectedObject.SetSelection(false, player.hud.GetPlayingArea());
+						player.SelectedObject = null;
 					}
 				}
 			}
@@ -189,10 +199,13 @@ public class UserInput : MonoBehaviour
 
 	private void RightMouseClick()
 	{
-		if (player.hud.MouseInBounds () && player.SelectedObject) 
+
+		GameObject hitObject = FindHitObject();
+		Vector3 hitPoint = FindHitPoint();
+
+		if (player.SelectedObject && player.hud.MouseInBounds () && hitObject && hitPoint != RessourceManager.InvalidPosition)
 		{
-			player.SelectedObject.SetSelection(false, player.hud.GetPlayingArea());
-			player.SelectedObject = null;
+			player.SelectedObject.MouseClick(hitObject, hitPoint, player);
 		}
 	}
 
