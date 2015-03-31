@@ -34,8 +34,7 @@ public class OreDeposit : Resource {
 			foreach (Ore ore in blocks) 
 			{
 				sortedBlocks[blocks.Length - int.Parse(ore.name)] = ore;
-				//print ("ore n:");
-				//print ( ore.name);
+
 			}
 			for (int i = numBlocksToShow; i < sortedBlocks.Length; i++) 
 			{

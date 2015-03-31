@@ -62,14 +62,14 @@ public class WorldObject : MonoBehaviour {
 
 	public virtual void MouseClick(GameObject hitObject, Vector3 hitPoint, Player controlleur) //gestion de l'evenement si le joueur clique
 	{
-		if (currentlySelected && hitObject && hitObject.name != "Ground") 
+		/*if (currentlySelected && hitObject && hitObject.name != "Ground") 
 		{
 			WorldObject worldObject = hitObject.transform.parent.GetComponent< WorldObject >();
 			if (worldObject)
 			{
 				ChangeSelection(worldObject, controlleur);
 			}
-		}
+		}*/
 	}
 		
 	private void ChangeSelection(WorldObject worldObject, Player controller) //change la selection du joueur pour l'objet selectionne
@@ -127,6 +127,11 @@ public class WorldObject : MonoBehaviour {
 		{
 			return false;
 		}
+	}
+
+	public Bounds GetSelectionBounds()
+	{
+		return selectionBounds;
 	}
 
 }

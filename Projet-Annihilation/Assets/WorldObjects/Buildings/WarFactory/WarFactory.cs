@@ -7,7 +7,7 @@ public class WarFactory : Building {
 	protected override void Start () 
 	{
 		base.Start ();
-		actions = new string[] {"Tank", "Tank", "Tank"};
+		actions = new string[] {"Tank", "Tank", "Tank", "Harvester", "Harvester", "Harvester"};
 		maxBuildProgress = 10.0f;
 	}
 
