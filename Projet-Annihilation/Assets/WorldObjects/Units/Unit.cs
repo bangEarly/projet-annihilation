@@ -68,7 +68,7 @@ public class Unit : WorldObject
 		}
 	}
 
-	public void StartMove(Vector3 destination)
+	public virtual void StartMove(Vector3 destination)
 	{
 		this.destination = destination;
 		agent.SetDestination (destination);
@@ -105,12 +105,16 @@ public class Unit : WorldObject
 		Vector3 origin = transform.position;
 		Vector3 direction = new Vector3(destination.x - origin.x, 0.0f, destination.z - origin.z);
 		direction.Normalize();
-		
+
 		//destination = center of destination - number of unit vectors calculated above
 		//this should give us a destination where the unit will not quite collide with the target
 		//giving the illusion of moving to the edge of the target and then stopping
 		for(int i = 0; i < shiftAmount; i++) destination -= direction;
 		destination.y = destinationTarget.transform.position.y;
+	}
+
+	public virtual void SetBuilding(Building creator)
+	{
 	}
 
 }

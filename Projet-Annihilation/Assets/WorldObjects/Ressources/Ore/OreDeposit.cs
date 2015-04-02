@@ -19,14 +19,14 @@ public class OreDeposit : Resource {
 	{
 		base.Update ();
 		float percentLeft = (float)amountLeft / (float)capacity;
-
-		if (percentLeft < 0) 
+		Ore[] blocks = GetComponentsInChildren< Ore > ();
+		if (percentLeft <= 0) 
 		{
 			percentLeft = 0;
+			Destroy(gameObject);
 		}
 		int numBlocksToShow = (int)(percentLeft * numBlocks);
-		Ore[] blocks = GetComponentsInChildren< Ore > ();
-		//print (blocks.Length);
+
 		if (numBlocksToShow >= 0 && numBlocksToShow < blocks.Length) 
 		{
 			Ore[] sortedBlocks = new Ore[blocks.Length];

@@ -10,6 +10,12 @@ public class Player : MonoBehaviour {
 	public HUD hud;
 	public WorldObject SelectedObject { get; set; }
 
+	public Material notAllowedMaterial, allowedMaterial;
+
+	private Building tempBuilding;
+	private Unit tempCreator;
+	private bool findingPlacement = false;
+
 	//ressources
 	public int startCrystalite, startCrystaliteLimit, startDilithium, startDilithiudLimit,startPower, startPowerLimit;
 	private Dictionary< ResourceType, int> resources, resourceLimits;
@@ -80,6 +86,18 @@ public class Player : MonoBehaviour {
 		Units units = GetComponentInChildren< Units > ();
 		GameObject newUnit = (GameObject)Instantiate (RessourceManager.GetUnit (unitName), spawnPoint, rotation);
 		newUnit.transform.parent = units.transform;
+	}
+
+	public void CreatBuilding(string buildingName, Vector3 buildPoint, Unit creator, Rect playingArea)
+	{
+		GameObject newBuilding = (GameObject)Instantiate (RessourceManager.GetBuilding (buildingName), buildPoint, new Quaternion ());
+		tempBuilding = newBuilding.GetComponent<Building> ();
+		if (tempBuilding) 
+		{
+			tempCreator = creator;
+			findingPlacement = true;
+			tempBuilding.Set
+		}
 	}
 
 }
