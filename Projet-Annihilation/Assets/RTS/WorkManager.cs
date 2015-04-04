@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace RTS {
-	public class WorkManager {
+namespace RTS 
+{
+	public class WorkManager 
+	{
 
 		public static Rect CalculateSelectionBox(Bounds selectionBounds, Rect playingArea)
 		{
@@ -42,6 +44,35 @@ namespace RTS {
 
 			return new Rect(selectBoxLeft, selectBoxTop, selectBoxWidth, selectBoxHeight);
 
+		}
+
+		public static GameObject FindHitObject(Vector3 origin) //recherche de l'objet sur lequel le joueur a clique
+		{
+			Ray ray = Camera.main.ScreenPointToRay (origin);
+			RaycastHit hit;
+			if (Physics.Raycast (ray, out hit)) 
+			{
+				return hit.collider.gameObject;
+			} 
+			else 
+			{
+				return null;
+			}
+			
+		}
+		
+		public static Vector3 FindHitPoint(Vector3 origin) //verification que le point clique vise un "point cliquable"
+		{
+			Ray ray = Camera.main.ScreenPointToRay (origin);
+			RaycastHit hit;
+			if (Physics.Raycast (ray, out hit)) 
+			{
+				return hit.point;
+			} 
+			else 
+			{
+				return RessourceManager.InvalidPosition;
+			}
 		}
 
 	}

@@ -7,8 +7,8 @@ public class Harvester : Unit
 
 	public float capacity;
 
-	public bool harvesting = false, emptying = false;
-	public float currentLoad = 0.0f;
+	private bool harvesting = false, emptying = false;
+	private float currentLoad = 0.0f;
 	private ResourceType harvestType;
 	private Resource resourceDeposit;
 	public Building resourceStore;
@@ -29,33 +29,45 @@ public class Harvester : Unit
 	{
 		base.Update ();
 
-		if (transform.position.x - destination.x < 5 && transform.position.y - destination.y < 1 && transform.position.z - destination.z < 5) 
+		if ((transform.position.x - destination.x < 0.5 && transform.position.x - destination.x > -0.5) && 
+		    (transform.position.y - destination.y < 1  && transform.position.y - destination.y > -1) && 
+		    (transform.position.z - destination.z < 0.5 && transform.position.z - destination.z > -0.5)) 
 		{
-			if (harvesting || emptying) {
+
+			if (harvesting || emptying) 
+			{
 				Arms[] arms = GetComponentsInChildren<Arms> ();
 				foreach (Arms arm in arms) {
 					arm.GetComponent<Renderer> ().enabled = true;
 				}
 
-				if (harvesting) {
+				if (harvesting) 
+				{
 					Collect ();
-					if (currentLoad >= capacity || resourceDeposit.isEmpty ()) {
+					if (currentLoad >= capacity || resourceDeposit.isEmpty ()) 
+					{
 						currentLoad = Mathf.Floor (currentLoad);
 						harvesting = false;
 						emptying = true;
-						foreach (Arms arm in arms) {
+						foreach (Arms arm in arms) 
+						{
 							arm.GetComponent<Renderer> ().enabled = false;
 						}
 						StartMove (resourceStore.transform.position, resourceStore.gameObject);
 					}
-				} else {
+				} 
+				else 
+				{
 					Deposit ();
-					if (currentLoad <= 0) {
+					if (currentLoad <= 0) 
+					{
 						emptying = false;
-						foreach (Arms arm in arms) {
+						foreach (Arms arm in arms) 
+						{
 							arm.GetComponent<Renderer> ().enabled = false;
 						}
-						if (!resourceDeposit.isEmpty ()) {
+						if (!resourceDeposit.isEmpty ()) 
+						{
 							harvesting = true;
 							StartMove (resourceDeposit.transform.position, resourceDeposit.gameObject);
 						}
@@ -115,7 +127,7 @@ public class Harvester : Unit
 			harvestType = resource.GetResourceType();
 			currentLoad = 0.0f;
 		}
-		
+
 		StartMove (resource.transform.position, resource.gameObject);
 		harvesting = true;
 		emptying = false;
@@ -123,7 +135,10 @@ public class Harvester : Unit
 
 	private void StopHarvest()
 	{
-
+		harvesting = false;
+		emptying = false;
+		currentLoad = 0.0f;
+		harvestType = ResourceType.Unknown;
 	}
 
 	private void Collect()
@@ -134,7 +149,7 @@ public class Harvester : Unit
 		{
 			collect = capacity - currentLoad;
 		}
-		Debug.Log ("et merde");
+
 		resourceDeposit.Remove (collect);
 		currentLoad += collect;
 	}

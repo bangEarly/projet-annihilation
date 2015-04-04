@@ -13,7 +13,7 @@ public class Worker : Unit {
 	void Start ()
 	{
 		base.Start ();
-		actions = new string[] {"WarFactory"};
+		actions = new string[] {"WarFactory", "QGrobot"};
 	}
 	
 	// Update is called once per frame
@@ -41,7 +41,7 @@ public class Worker : Unit {
 		Vector3 buildPoint = new Vector3 (transform.position.x, transform.position.y, transform.position.z + 10);
 		if (player) 
 		{
-			player.
+			player.CreatBuilding(buildingName, buildPoint, this, playingArea);
 		}
 
 	}

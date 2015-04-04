@@ -96,8 +96,27 @@ public class Player : MonoBehaviour {
 		{
 			tempCreator = creator;
 			findingPlacement = true;
-			tempBuilding.Set
+			tempBuilding.SetTransparentMaterial (notAllowedMaterial, true);
+			tempBuilding.SetColliders (false);
+			tempBuilding.SetPlayingArea (playingArea);
+		} 
+		else 
+		{
+			Destroy(newBuilding);
 		}
+	}
+
+	public bool IsFindingBuildingLocation()
+	{
+		return findingPlacement;
+	}
+
+	public void FindBuildingLocation()
+	{
+		Vector3 newLocation = WorkManager.FindHitPoint (Input.mousePosition);
+		newLocation.y = 0;
+		tempBuilding.transform.position = newLocation;
+
 	}
 
 }

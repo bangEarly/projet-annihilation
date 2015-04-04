@@ -6,7 +6,7 @@ public class Unit : WorldObject
 {
 	//variables movement
 	protected bool moving, rotating;
-	public Vector3 destination;
+	protected Vector3 destination;
 	private Quaternion targetRotation;
 	public float moveSpeed, rotateSpeed;
 	private NavMeshAgent agent;
