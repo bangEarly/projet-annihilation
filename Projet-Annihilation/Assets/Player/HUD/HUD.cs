@@ -115,8 +115,8 @@ public class HUD : MonoBehaviour {
 		GUI.Box (new Rect (0, 0, Screen.width, ORDERS_BAR_WIDTH), "");
 
 		string selectionName = player.SelectedObject.objectName;
-
-		if (player.SelectedObject.IsOwnedBy (player)) 
+		Building building = player.SelectedObject.GetComponent<Building>();
+		if (player.SelectedObject.IsOwnedBy (player) && ((building && building.isBuilt()) || (!building))) 
 		{
 			if (lastSelection && lastSelection != player.SelectedObject) 
 			{

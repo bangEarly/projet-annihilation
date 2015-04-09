@@ -7,7 +7,9 @@ public class WorldObject : MonoBehaviour {
 
 	public string objectName;
 	public Texture2D buildImage;
-	public int cost, sellValue, hitPoints, maxHitPoints;
+	public int /*cost, sellValue,*/ hitPoints, maxHitPoints;
+
+	public Dictionary<ResourceType, int> cost = new Dictionary<ResourceType, int> (), sellValue = new Dictionary<ResourceType, int> ();
 
 	protected Player player;
 	protected string[] actions = {};
@@ -27,8 +29,8 @@ public class WorldObject : MonoBehaviour {
 	// Use this for initialization
 	protected virtual void Start () 
 	{
-		player = transform.root.GetComponent/*InChildren*/< Player > ();
-	
+		//cost = new Dictionary<ResourceType, int> ();
+		SetPlayer ();
 	}
 	
 	// Update is called once per frame
@@ -95,7 +97,7 @@ public class WorldObject : MonoBehaviour {
 		GUI.EndGroup ();
 	}
 
-	protected void CalculateBounds()
+	public void CalculateBounds()
 	{
 		selectionBounds = new Bounds (transform.position, Vector3.zero);
 		foreach (Renderer r in GetComponentsInChildren< Renderer >() ) 
@@ -178,6 +180,11 @@ public class WorldObject : MonoBehaviour {
 	public void SetPlayingArea(Rect playingArea)
 	{
 		this.playingArea = playingArea;
+	}
+
+	public void SetPlayer()
+	{
+		player = transform.root.GetComponent/*InChildren*/< Player > ();
 	}
 
 }

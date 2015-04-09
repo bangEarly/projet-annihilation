@@ -148,31 +148,41 @@ public class UserInput : MonoBehaviour
 	{
 		if (player.hud.MouseInBounds ()) 
 		{
-			GameObject hitObject = FindHitObject();
-			Vector3 hitPoint = FindHitPoint();
-			if (hitObject && hitPoint != RessourceManager.InvalidPosition)
+			if (player.IsFindingBuildingLocation ()) 
 			{
-
-				if (hitObject.name != "Ground")
+				if (player.CanPlaceBuilding ()) 
 				{
-					WorldObject worldObject = hitObject.transform.parent.GetComponent< WorldObject >();
-					if (worldObject)
+					player.StartConstruction ();
+				}
+			} 
+			else 
+			{
+				GameObject hitObject = FindHitObject ();
+				Vector3 hitPoint = FindHitPoint ();
+				if (hitObject && hitPoint != RessourceManager.InvalidPosition) 
+				{
+
+					if (hitObject.name != "Ground") 
 					{
-						if (player.SelectedObject)
+						WorldObject worldObject = hitObject.transform.parent.GetComponent< WorldObject > ();
+						if (worldObject) 
 						{
-							player.SelectedObject.SetSelection(false, player.hud.GetPlayingArea());
+							if (player.SelectedObject) 
+							{
+								player.SelectedObject.SetSelection (false, player.hud.GetPlayingArea ());
+								player.SelectedObject = null;
+							}
+							player.SelectedObject = worldObject;
+							worldObject.SetSelection (true, player.hud.GetPlayingArea ());
+						}
+					} 
+					else 
+					{
+						if (player.hud.MouseInBounds () && player.SelectedObject) 
+						{
+							player.SelectedObject.SetSelection (false, player.hud.GetPlayingArea ());
 							player.SelectedObject = null;
 						}
-						player.SelectedObject = worldObject;
-						worldObject.SetSelection(true, player.hud.GetPlayingArea());
-					}
-				}
-				else
-				{
-					if (player.hud.MouseInBounds () && player.SelectedObject) 
-					{
-						player.SelectedObject.SetSelection(false, player.hud.GetPlayingArea());
-						player.SelectedObject = null;
 					}
 				}
 			}

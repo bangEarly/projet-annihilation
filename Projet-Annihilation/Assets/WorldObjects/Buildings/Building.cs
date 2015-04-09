@@ -10,6 +10,10 @@ public class Building : WorldObject {
 	private float currentBuildProgress = 0.0f;
 	private Vector3 spawnPoint;
 
+	private bool needsBuilding = false;
+
+	public float workLeft;
+
 	protected override void Awake()
 	{
 		base.Awake ();
@@ -73,6 +77,28 @@ public class Building : WorldObject {
 	public float getBuildPercentage()
 	{
 		return currentBuildProgress / maxBuildProgress;
+	}
+
+	public void StartConstruction()
+	{
+		CalculateBounds ();
+		needsBuilding = true;
+		hitPoints = 0;
+	}
+
+	public void Construct(float work)
+	{
+		workLeft -= work;
+		if (workLeft <= 0) 
+		{
+			workLeft = 0;
+			RestoreMaterials();
+		}
+	}
+
+	public bool isBuilt()
+	{
+		return workLeft == 0;
 	}
 
 }

@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using RTS;
+using System.Collections.Generic;
 
 public class Worker : Unit {
 
@@ -10,16 +12,27 @@ public class Worker : Unit {
 	private float amountBuilding = 0.0f;
 
 	// Use this for initialization
-	void Start ()
+	protected override void Start ()
 	{
 		base.Start ();
 		actions = new string[] {"WarFactory", "QGrobot"};
 	}
 	
 	// Update is called once per frame
-	void Update () 
+	protected override void Update () 
 	{
 		base.Update ();
+
+		if ((transform.position.x - destination.x < 0.5 && transform.position.x - destination.x > -0.5) && 
+			(transform.position.y - destination.y < 1 && transform.position.y - destination.y > -1) && 
+			(transform.position.z - destination.z < 0.5 && transform.position.z - destination.z > -0.5)) 
+		{
+
+			if (building)
+			{
+				currentProject.Construct(buildSpeed * Time.deltaTime);
+			}
+		}
 	}
 
 	public override void SetBuilding (Building project)
@@ -30,10 +43,28 @@ public class Worker : Unit {
 		building = true;
 	}
 
+	public void StopBuilding()
+	{
+		currentProject = null;
+		building = false;
+	}
+
 	public override void PerformAction (string actionToPerform)
 	{
 		base.PerformAction (actionToPerform);
-		CreateBuilding (actionToPerform);
+		int costCrystalite = RessourceManager.GetBuilding (actionToPerform).GetComponent<Building> ().cost[ResourceType.Crystalite];
+		Debug.Log (costCrystalite);
+		if (RessourceManager.GetBuilding (actionToPerform).GetComponent<Building> ().cost [ResourceType.Crystalite] > player.GetResource (ResourceType.Crystalite) 
+			|| RessourceManager.GetBuilding (actionToPerform).GetComponent<Building> ().cost [ResourceType.Dilithium] > player.GetResource (ResourceType.Dilithium)) 
+		{
+			Debug.Log ("Not enough resources!");
+		} 
+		else 
+		{
+			/*layer.AddResource (ResourceType.Crystalite, - RessourceManager.GetBuilding (actionToPerform).GetComponent<Building> ().cost [ResourceType.Crystalite]);
+			player.AddResource (ResourceType.Dilithium, - RessourceManager.GetBuilding (actionToPerform).GetComponent<Building> ().cost [ResourceType.Dilithium]);*/
+			CreateBuilding (actionToPerform);
+		}
 	}
 
 	private void CreateBuilding(string buildingName)
@@ -44,5 +75,26 @@ public class Worker : Unit {
 			player.CreatBuilding(buildingName, buildPoint, this, playingArea);
 		}
 
+	}
+
+	public override void MouseClick (GameObject hitObject, Vector3 hitPoint, Player controller)
+	{
+		base.MouseClick(hitObject, hitPoint, controller);
+
+		if (player && player.human) 
+		{
+			if (hitObject.name != "Ground")
+			{
+				Building building = hitObject.transform.parent.GetComponent< Building >();
+				if (building && !building.isBuilt())
+				{
+					SetBuilding(building);
+				}
+			}
+			else
+			{
+				StopBuilding();
+			}
+		}
 	}
 }

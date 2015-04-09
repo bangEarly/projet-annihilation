@@ -1,0 +1,36 @@
+Ordre du jour et bilan:
+
+    - Ce qui a ete fait depuis la derniere reunion:
+	- Violaine:
+	    * Modele de la tour de guet 
+	    * Modele de la crystalite
+	    * Collecteur de ressource en cours
+	    * Prise de connaissance du travail a fournir pour le brouillard de guerre
+	- Yann:
+	    * tiers du modele du robot constructeur
+	- Corentin:
+	    * Gestion de la collecte de ressource
+	    * Gestion de la construction de batiment
+   
+    - Objectifs de fin de reunion:
+	
+	* initer violaine a unity
+
+    - Objectifs pour le 16 avril:
+	- Violaine:
+	    * Finir le modele du collecteur de ressource
+	    * commencer le modele d'une unite de soldat basique
+	- Yann:
+	    * Finir le Modele de l'ouvrier robot
+	- Corentin:
+	    * faire la gestion des combats
+
+    - Objectifs pour le 22 avril:
+	- Violaine:
+	    * Finir le modele de l'unite de soldat
+	    * commencer le brouillard de guerre
+	- Yann:
+	    * commencer la mini-map 
+	    * regarder le code du projet actuel (avec aide du tutoriel)
+	- Corentin:
+	    * Avoir commencer le reseaux
