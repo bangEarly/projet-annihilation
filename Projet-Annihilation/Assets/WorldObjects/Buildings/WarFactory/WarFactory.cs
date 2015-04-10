@@ -5,9 +5,9 @@ using RTS;
 
 public class WarFactory : Building {
 
-	public Dictionary<ResourceType, int> cost = new Dictionary<ResourceType, int> () {
-		{ResourceType.Crystalite, 200},
-		{ResourceType.Dilithium, 50}};
+	//public Dictionary<ResourceType, int> cost = new Dictionary<ResourceType, int> () {
+	//	{ResourceType.Crystalite, 200},
+	//	{ResourceType.Dilithium, 50}};
 
 	// Use this for initialization
 	protected override void Start () 
