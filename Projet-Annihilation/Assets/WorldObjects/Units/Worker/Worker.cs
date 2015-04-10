@@ -52,7 +52,7 @@ public class Worker : Unit {
 	public override void PerformAction (string actionToPerform)
 	{
 		base.PerformAction (actionToPerform);
-		int costCrystalite = RessourceManager.GetBuilding (actionToPerform).GetComponent<Building> ().cost[ResourceType.Crystalite];
+		/*int costCrystalite = RessourceManager.GetBuilding (actionToPerform).GetComponent<Building> ().cost[ResourceType.Crystalite];
 		Debug.Log (costCrystalite);
 		if (RessourceManager.GetBuilding (actionToPerform).GetComponent<Building> ().cost [ResourceType.Crystalite] > player.GetResource (ResourceType.Crystalite) 
 			|| RessourceManager.GetBuilding (actionToPerform).GetComponent<Building> ().cost [ResourceType.Dilithium] > player.GetResource (ResourceType.Dilithium)) 
@@ -60,11 +60,11 @@ public class Worker : Unit {
 			Debug.Log ("Not enough resources!");
 		} 
 		else 
-		{
+		{*/
 			/*layer.AddResource (ResourceType.Crystalite, - RessourceManager.GetBuilding (actionToPerform).GetComponent<Building> ().cost [ResourceType.Crystalite]);
 			player.AddResource (ResourceType.Dilithium, - RessourceManager.GetBuilding (actionToPerform).GetComponent<Building> ().cost [ResourceType.Dilithium]);*/
 			CreateBuilding (actionToPerform);
-		}
+		//}
 	}
 
 	private void CreateBuilding(string buildingName)
