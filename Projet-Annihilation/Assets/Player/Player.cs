@@ -197,6 +197,9 @@ public class Player : MonoBehaviour {
 		tempBuilding.SetTransparentMaterial (inConstructionMaterial, false);
 		tempCreator.SetBuilding (tempBuilding);
 		tempBuilding.StartConstruction ();
+		float spawnX = tempBuilding.selectionBounds.center.x + tempBuilding.transform.forward.x * tempBuilding.selectionBounds.extents.x + tempBuilding.transform.forward.x * (float)1.5;
+		float spawnZ = tempBuilding.selectionBounds.center.z + tempBuilding.transform.forward.z * tempBuilding.selectionBounds.extents.z + tempBuilding.transform.forward.z * (float)1.5;
+		tempBuilding.spawnPoint = new Vector3 (spawnX, 0.0f, spawnZ);
 	}
 
 }

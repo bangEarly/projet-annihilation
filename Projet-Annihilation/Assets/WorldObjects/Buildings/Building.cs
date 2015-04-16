@@ -8,7 +8,7 @@ public class Building : WorldObject {
 	public float maxBuildProgress;
 	protected Queue< string > buildQueue;
 	private float currentBuildProgress = 0.0f;
-	private Vector3 spawnPoint;
+	public Vector3 spawnPoint;
 
 	private bool needsBuilding = false;
 
@@ -17,16 +17,16 @@ public class Building : WorldObject {
 	protected override void Awake()
 	{
 		base.Awake ();
-		buildQueue = new Queue<string> ();
-		float spawnX = selectionBounds.center.x + transform.forward.x * selectionBounds.extents.x + transform.forward.x * 10;
-		float spawnZ = selectionBounds.center.z + transform.forward.z * selectionBounds.extents.z + transform.forward.z * 10;
-		spawnPoint = new Vector3 (spawnX, 0.0f, spawnZ);
 	}
 	
 	// Use this for initialization
 	protected override void Start () {
 	
 		base.Start ();
+		buildQueue = new Queue<string> ();
+		float spawnX = selectionBounds.center.x + transform.forward.x * selectionBounds.extents.x + transform.forward.x * 20;
+		float spawnZ = selectionBounds.center.z + transform.forward.z * selectionBounds.extents.z + transform.forward.z * 20;
+		spawnPoint = new Vector3 (spawnX, 0.0f, spawnZ);
 	}
 	
 	// Update is called once per frame

@@ -15,7 +15,7 @@ public class WorldObject : MonoBehaviour {
 	protected string[] actions = {};
 	public bool currentlySelected = false;
 
-	protected Bounds selectionBounds;
+	public Bounds selectionBounds;
 	protected Rect playingArea = new Rect(0.0f, 0.0f, 0.0f, 0.0f);
 
 	private List< Material > oldMaterials = new List<Material> ();
