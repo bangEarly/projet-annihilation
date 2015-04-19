@@ -43,7 +43,21 @@ public class Building : WorldObject {
 
 	protected void CreatUnit(string unitName)
 	{
-		buildQueue.Enqueue (unitName);
+		Unit unitToMake = RessourceManager.GetUnit (unitName).GetComponent<Unit>();
+		if (unitToMake.costCrystalite > player.GetResource (ResourceType.Crystalite) ||
+			unitToMake.costDilithium > player.GetResource (ResourceType.Dilithium) ||
+			unitToMake.costPower > player.GetResource (ResourceType.Power)) 
+		{
+			player.hud.notEnoughtResourceTimer = 3;
+			Debug.Log ("Not enough resources!");
+		} 
+		else 
+		{
+			player.AddResource(ResourceType.Crystalite, - unitToMake.costCrystalite);
+			player.AddResource(ResourceType.Dilithium, - unitToMake.costDilithium);
+			player.AddResource(ResourceType.Power, - unitToMake.costPower);
+			buildQueue.Enqueue (unitName);
+		}
 	}
 
 	protected void ProcessBuildQueue()

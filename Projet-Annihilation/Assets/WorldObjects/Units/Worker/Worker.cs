@@ -52,27 +52,29 @@ public class Worker : Unit {
 	public override void PerformAction (string actionToPerform)
 	{
 		base.PerformAction (actionToPerform);
-		/*int costCrystalite = RessourceManager.GetBuilding (actionToPerform).GetComponent<Building> ().cost[ResourceType.Crystalite];
-		Debug.Log (costCrystalite);
-		if (RessourceManager.GetBuilding (actionToPerform).GetComponent<Building> ().cost [ResourceType.Crystalite] > player.GetResource (ResourceType.Crystalite) 
-			|| RessourceManager.GetBuilding (actionToPerform).GetComponent<Building> ().cost [ResourceType.Dilithium] > player.GetResource (ResourceType.Dilithium)) 
-		{
-			Debug.Log ("Not enough resources!");
-		} 
-		else 
-		{*/
-			/*layer.AddResource (ResourceType.Crystalite, - RessourceManager.GetBuilding (actionToPerform).GetComponent<Building> ().cost [ResourceType.Crystalite]);
-			player.AddResource (ResourceType.Dilithium, - RessourceManager.GetBuilding (actionToPerform).GetComponent<Building> ().cost [ResourceType.Dilithium]);*/
-			CreateBuilding (actionToPerform);
-		//}
+		CreateBuilding (actionToPerform);
 	}
 
 	private void CreateBuilding(string buildingName)
 	{
-		Vector3 buildPoint = new Vector3 (transform.position.x, transform.position.y, transform.position.z + 10);
-		if (player) 
+		Building buildingToBuild = RessourceManager.GetBuilding (buildingName).GetComponent<Building> (); 
+		if (buildingToBuild.costCrystalite > player.GetResource (ResourceType.Crystalite) 
+			|| buildingToBuild.costDilithium > player.GetResource (ResourceType.Dilithium)
+			|| buildingToBuild.costPower > player.GetResource (ResourceType.Power)) 
 		{
-			player.CreatBuilding(buildingName, buildPoint, this, playingArea);
+			player.hud.notEnoughtResourceTimer = 3;
+			Debug.Log ("Not enough resources!");
+		} 
+		else 
+		{
+			player.AddResource (ResourceType.Crystalite, - buildingToBuild.costCrystalite);
+			player.AddResource (ResourceType.Dilithium, - buildingToBuild.costDilithium);
+			player.AddResource (ResourceType.Power, - buildingToBuild.costPower);
+
+			Vector3 buildPoint = new Vector3 (transform.position.x, transform.position.y, transform.position.z + 10);
+			if (player) {
+				player.CreatBuilding (buildingName, buildPoint, this, playingArea);
+			}
 		}
 
 	}

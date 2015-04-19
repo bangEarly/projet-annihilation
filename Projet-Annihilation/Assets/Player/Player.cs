@@ -205,6 +205,9 @@ public class Player : MonoBehaviour {
 
 	public void CancelBuildingPlacement()
 	{
+		AddResource (ResourceType.Crystalite, tempBuilding.costCrystalite);
+		AddResource (ResourceType.Dilithium, tempBuilding.costDilithium);
+		AddResource (ResourceType.Power, tempBuilding.costPower);
 		findingPlacement = false;
 		Destroy (tempBuilding.gameObject);
 		tempBuilding = null;

@@ -7,9 +7,7 @@ public class WorldObject : MonoBehaviour {
 
 	public string objectName;
 	public Texture2D buildImage;
-	public int /*cost, sellValue,*/ hitPoints, maxHitPoints;
-
-	public Dictionary<ResourceType, int> cost = new Dictionary<ResourceType, int> (), sellValue = new Dictionary<ResourceType, int> ();
+	public int /*cost, sellValue,*/ hitPoints, maxHitPoints, costCrystalite, costDilithium, costPower;
 
 	protected Player player;
 	protected string[] actions = {};

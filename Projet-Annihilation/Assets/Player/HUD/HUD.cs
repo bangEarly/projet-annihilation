@@ -39,6 +39,8 @@ public class HUD : MonoBehaviour {
 	//affichage de la file de construction
 	private const int BUILD_IMAGE_PADDING = 8;
 	public Texture2D buildFrame, buildMask;
+	
+	public float notEnoughtResourceTimer;
 
 	// Use this for initialization
 	void Start () 
@@ -87,6 +89,19 @@ public class HUD : MonoBehaviour {
 			if (player.SelectedObject)
 			{
 				DrawOrdersBar ();
+				if (notEnoughtResourceTimer > 0)
+				{
+					if (!transform.GetChild(0).GetComponent<Canvas>().enabled)
+					{
+						transform.GetChild(0).GetComponent<Canvas>().enabled = true;
+					}
+					notEnoughtResourceTimer -= Time.deltaTime;
+					if (notEnoughtResourceTimer <= 0)
+					{
+						transform.GetChild(0).GetComponent<Canvas>().enabled = false;
+					}
+					
+				}
 			}
 		}
 		DrawMouseCursor ();
