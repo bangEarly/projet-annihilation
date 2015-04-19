@@ -20,6 +20,7 @@ public class Player : MonoBehaviour {
 	public int startCrystalite, startCrystaliteLimit, startDilithium, startDilithiudLimit,startPower, startPowerLimit;
 	private Dictionary< ResourceType, int> resources, resourceLimits;
 
+	public int test = 0;
 
 	void Awake()
 	{
@@ -200,6 +201,14 @@ public class Player : MonoBehaviour {
 		float spawnX = tempBuilding.selectionBounds.center.x + tempBuilding.transform.forward.x * tempBuilding.selectionBounds.extents.x + tempBuilding.transform.forward.x * (float)1.5;
 		float spawnZ = tempBuilding.selectionBounds.center.z + tempBuilding.transform.forward.z * tempBuilding.selectionBounds.extents.z + tempBuilding.transform.forward.z * (float)1.5;
 		tempBuilding.spawnPoint = new Vector3 (spawnX, 0.0f, spawnZ);
+	}
+
+	public void CancelBuildingPlacement()
+	{
+		findingPlacement = false;
+		Destroy (tempBuilding.gameObject);
+		tempBuilding = null;
+		tempCreator = null;
 	}
 
 }

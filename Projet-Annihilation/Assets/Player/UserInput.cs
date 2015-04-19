@@ -25,6 +25,10 @@ public class UserInput : MonoBehaviour
 			MoveCamera();
 			RotateCamera();
 			MouseActivity(); 
+			if (Input.GetMouseButtonUp(0))
+			{
+				player.test ++;
+			}
 		}
 	}
 
@@ -146,45 +150,40 @@ public class UserInput : MonoBehaviour
 	
 	 private void LeftMouseClick()
 	{
-		if (player.hud.MouseInBounds ()) 
-		{
-			if (player.IsFindingBuildingLocation ()) 
-			{
-				if (player.CanPlaceBuilding ()) 
-				{
+		if (player.hud.MouseInBounds ()) {
+			if (player.IsFindingBuildingLocation ()) {
+				if (player.CanPlaceBuilding ()) {
 					player.StartConstruction ();
 				}
-			} 
-			else 
-			{
+			} else {
 				GameObject hitObject = FindHitObject ();
 				Vector3 hitPoint = FindHitPoint ();
-				if (hitObject && hitPoint != RessourceManager.InvalidPosition) 
-				{
+				if (hitObject && hitPoint != RessourceManager.InvalidPosition) {
 
-					if (hitObject.name != "Ground") 
-					{
+					if (hitObject.name != "Ground") {
 						WorldObject worldObject = hitObject.transform.parent.GetComponent< WorldObject > ();
-						if (worldObject) 
-						{
-							if (player.SelectedObject) 
-							{
+						if (worldObject) {
+							if (player.SelectedObject) {
 								player.SelectedObject.SetSelection (false, player.hud.GetPlayingArea ());
 								player.SelectedObject = null;
 							}
 							player.SelectedObject = worldObject;
 							worldObject.SetSelection (true, player.hud.GetPlayingArea ());
 						}
-					} 
-					else 
-					{
-						if (player.hud.MouseInBounds () && player.SelectedObject) 
-						{
+					} else {
+						if (player.hud.MouseInBounds () && player.SelectedObject) {
 							player.SelectedObject.SetSelection (false, player.hud.GetPlayingArea ());
 							player.SelectedObject = null;
 						}
 					}
 				}
+			}
+		} 
+		else 
+		{
+			if (player.IsFindingBuildingLocation())
+			{
+				player.CancelBuildingPlacement();
 			}
 		}
 	}
@@ -195,10 +194,15 @@ public class UserInput : MonoBehaviour
 		GameObject hitObject = FindHitObject();
 		Vector3 hitPoint = FindHitPoint();
 
-		if (player.SelectedObject && player.hud.MouseInBounds () && hitObject && hitPoint != RessourceManager.InvalidPosition)
+		if (player.IsFindingBuildingLocation ()) 
+		{
+			player.CancelBuildingPlacement();
+		}
+		else if (player.SelectedObject && player.hud.MouseInBounds () && hitObject && hitPoint != RessourceManager.InvalidPosition)
 		{
 			player.SelectedObject.MouseClick(hitObject, hitPoint, player);
 		}
+
 	}
 
 	private void MouseHover()
