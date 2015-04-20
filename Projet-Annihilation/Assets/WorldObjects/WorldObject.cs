@@ -18,6 +18,9 @@ public class WorldObject : MonoBehaviour {
 
 	private List< Material > oldMaterials = new List<Material> ();
 
+	protected GUIStyle healthStyle = new GUIStyle();
+	protected float healthPercentage = 1.0f;
+
 	protected virtual void Awake()
 	{
 		selectionBounds = RessourceManager.InvalidBounds;
@@ -107,6 +110,8 @@ public class WorldObject : MonoBehaviour {
 	protected virtual void DrawSelectionBox(Rect selectBox)
 	{
 		GUI.Box (selectBox, "");
+		CalculateCurrentHealth ();
+		GUI.Label (new Rect (selectBox.x, selectBox.y - 7, selectBox.width * healthPercentage, 5), "", healthStyle);
 	}
 
 	public virtual void SetHoverState(GameObject hoverObject)
@@ -183,6 +188,24 @@ public class WorldObject : MonoBehaviour {
 	public void SetPlayer()
 	{
 		player = transform.root.GetComponent/*InChildren*/< Player > ();
+	}
+
+	protected virtual void CalculateCurrentHealth()
+	{
+		healthPercentage = (float)hitPoints / (float)maxHitPoints;
+		if (healthPercentage > 0.65f) 
+		{
+			healthStyle.normal.background = RessourceManager.HealthyTexture;
+		} 
+		else if (healthPercentage > 0.35f) 
+		{
+			healthStyle.normal.background = RessourceManager.DamagedTexture;
+		} 
+		else 
+		{
+			healthStyle.normal.background = RessourceManager.CriticalTexture;
+		}
+		     
 	}
 
 }

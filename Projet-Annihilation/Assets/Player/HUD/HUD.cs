@@ -42,11 +42,13 @@ public class HUD : MonoBehaviour {
 	
 	public float notEnoughtResourceTimer;
 
+	public Texture2D healthy, damaged, critical;
+
 	// Use this for initialization
 	void Start () 
 	{
 		player = transform.root.GetComponent< Player> ();
-		RessourceManager.StoreSelectBoxItems(selectBoxSkin);
+		RessourceManager.StoreSelectBoxItems(selectBoxSkin, healthy, damaged, critical);
 		SetCursorState (CursorState.Select);
 		resourceValues = new Dictionary<ResourceType, int> ();
 		resourceLimits = new Dictionary<ResourceType, int> ();
