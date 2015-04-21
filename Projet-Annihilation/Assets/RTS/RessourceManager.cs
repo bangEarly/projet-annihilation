@@ -24,12 +24,14 @@ namespace RTS {
 		//variables boite de selection
 		private static GUISkin selectBoxSkin;
 		public static GUISkin SelectBoxSkin { get { return selectBoxSkin; } }
-		public static void StoreSelectBoxItems(GUISkin skin, Texture2D healthy, Texture2D damaged, Texture2D critical)
+		public static void StoreSelectBoxItems(GUISkin skin, Texture2D healthy, Texture2D damaged, Texture2D critical, Texture2D resourceHealth, Texture2D construction)
 		{
 			selectBoxSkin = skin;
 			healthyTexture = healthy;
 			damagedTexture = damaged;
 			criticalTexture = critical;
+			resourceHealthTexture = resourceHealth;
+			constructionTexture = construction;
 		}
 
 		private static Bounds invalidBounds = new Bounds(new Vector3(-9999, -9999, -9999), new Vector3(0, 0, 0));
@@ -65,15 +67,22 @@ namespace RTS {
 			return gameObjectList.GetPlayerObject ();
 		}
 
+		public static Player GetActualPlayer ()
+		{
+			return gameObjectList.actualPlayer;
+		}
+
 		public static Texture2D GetBuildImage(string name)
 		{
 			return gameObjectList.GetBuildImage(name);
 		}
 
-		private static Texture2D healthyTexture, damagedTexture, criticalTexture;
+		private static Texture2D healthyTexture, damagedTexture, criticalTexture, resourceHealthTexture, constructionTexture;
 		public static Texture2D HealthyTexture { get { return healthyTexture; } }
 		public static Texture2D DamagedTexture { get { return damagedTexture; } }
 		public static Texture2D CriticalTexture { get { return criticalTexture; } }
+		public static Texture2D ResourceHealthBar { get { return resourceHealthTexture; } }
+		public static Texture2D ConstructionTexture { get { return constructionTexture; } }
 
 
 

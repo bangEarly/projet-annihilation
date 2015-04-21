@@ -26,7 +26,13 @@ public class Unit : WorldObject
 	protected override void Update ()
 	{	
 		base.Update ();
-		if (transform.position != destination) 
+		if ((transform.position.x - destination.x < 0.5 && transform.position.x - destination.x > -0.5) && 
+			(transform.position.y - destination.y < 1 && transform.position.y - destination.y > -1) && 
+			(transform.position.z - destination.z < 0.5 && transform.position.z - destination.z > -0.5)) 
+		{
+			movingIntoPosition = false;
+		} 
+		else 
 		{
 			CalculateBounds ();
 		}
@@ -63,6 +69,8 @@ public class Unit : WorldObject
 				float z = hitPoint.z;
 
 				Vector3 destination = new Vector3(x, y, z);
+				attacking = false;
+				target = null;
 				StartMove(destination);
 			}
 		}

@@ -12,7 +12,8 @@ public class Building : WorldObject {
 
 	private bool needsBuilding = false;
 
-	public float workLeft;
+	public float workLeft, maxWork;
+	private GUIStyle constructionBar = new GUIStyle ();
 
 	protected override void Awake()
 	{
@@ -27,6 +28,7 @@ public class Building : WorldObject {
 		float spawnX = selectionBounds.center.x + transform.forward.x * selectionBounds.extents.x + transform.forward.x * 20;
 		float spawnZ = selectionBounds.center.z + transform.forward.z * selectionBounds.extents.z + transform.forward.z * 20;
 		spawnPoint = new Vector3 (spawnX, 0.0f, spawnZ);
+		workLeft = maxWork;
 	}
 	
 	// Update is called once per frame
@@ -38,7 +40,10 @@ public class Building : WorldObject {
 
 	protected override void OnGUI()
 	{
-		base.OnGUI ();
+		if (currentlySelected || workLeft > 0) 
+		{
+			DrawSelection();
+		}
 	}
 
 	protected void CreatUnit(string unitName)
@@ -113,6 +118,20 @@ public class Building : WorldObject {
 	public bool isBuilt()
 	{
 		return workLeft == 0;
+	}
+
+	protected override void DrawSelectionBox (Rect selectBox)
+	{
+		if (workLeft > 0) 
+		{
+			float percentageWork = workLeft / maxWork;
+			constructionBar.normal.background = RessourceManager.ConstructionTexture;
+			GUI.Label ( new Rect (selectBox.x, selectBox.y - 20, selectBox.width * percentageWork, 3), "", constructionBar);
+		}
+		if (currentlySelected) 
+		{
+			base.DrawSelectionBox(selectBox);
+		}
 	}
 
 }

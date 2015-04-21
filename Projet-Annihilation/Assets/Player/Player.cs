@@ -22,6 +22,8 @@ public class Player : MonoBehaviour {
 
 	public int test = 0;
 
+	public Color teamColor;
+
 	void Awake()
 	{
 		resources = InitResourceList ();

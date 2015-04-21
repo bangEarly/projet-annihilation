@@ -16,6 +16,7 @@ public class Harvester : Unit
 	public float collectionAmount, depositAmount;
 	private float currentDeposit = 0.0f;
 
+	private GUIStyle fullStyle = new GUIStyle ();
 
 	// Use this for initialization
 	protected override void  Start () 
@@ -75,6 +76,14 @@ public class Harvester : Unit
 				}
 
 			}
+		}
+	}
+
+	protected override void OnGUI ()
+	{
+		if (harvesting || emptying || currentlySelected) 
+		{
+			DrawSelection ();
 		}
 	}
 
@@ -172,6 +181,20 @@ public class Harvester : Unit
 				depositType = ResourceType.Crystalite;
 			}
 			player.AddResource(depositType, deposit);
+		}
+	}
+
+	protected override void DrawSelectionBox (Rect selectBox)
+	{
+		if (harvesting || emptying) 
+		{
+			float percentFull = currentLoad / capacity;
+			fullStyle.normal.background = RessourceManager.ResourceHealthBar;
+			GUI.Label ( new Rect (selectBox.x, selectBox.y - 20, selectBox.width * percentFull, 3), "", fullStyle);
+		}
+		if (currentlySelected) 
+		{
+			base.DrawSelectionBox (selectBox);
 		}
 	}
 

@@ -42,13 +42,15 @@ public class HUD : MonoBehaviour {
 	
 	public float notEnoughtResourceTimer;
 
-	public Texture2D healthy, damaged, critical;
+	public Texture2D healthy, damaged, critical, resourceHealth, construction;
+
+	public RenderTexture minimap;
 
 	// Use this for initialization
 	void Start () 
 	{
 		player = transform.root.GetComponent< Player> ();
-		RessourceManager.StoreSelectBoxItems(selectBoxSkin, healthy, damaged, critical);
+		RessourceManager.StoreSelectBoxItems(selectBoxSkin, healthy, damaged, critical, resourceHealth, construction);
 		SetCursorState (CursorState.Select);
 		resourceValues = new Dictionary<ResourceType, int> ();
 		resourceLimits = new Dictionary<ResourceType, int> ();
@@ -85,9 +87,10 @@ public class HUD : MonoBehaviour {
 	// Update is called once per frame
 	void OnGUI () 
 	{
-		if (player && player.human) 
+		if (player && player.human && RessourceManager.GetActualPlayer() == player) 
 		{
 			DrawResourceBar ();
+			//DrawMiniMap();
 			if (player.SelectedObject)
 			{
 				DrawOrdersBar ();
@@ -105,8 +108,9 @@ public class HUD : MonoBehaviour {
 					
 				}
 			}
+			DrawMouseCursor ();
 		}
-		DrawMouseCursor ();
+
 	}
 
 	private void DrawResourceBar ()
@@ -407,6 +411,13 @@ public class HUD : MonoBehaviour {
 			}
 			GUI.DrawTexture(new Rect(128 + BUILD_IMAGE_PADDING, topPos, width, height), buildMask);
 		}
+	}
+
+	public void DrawMiniMap()
+	{
+		GUI.BeginGroup (new Rect (0, Screen.height - Screen.height / 5, Screen.height / 5, Screen.height / 5));
+		GUI.Box (new Rect (0, 0, Screen.height / 5, Screen.height / 5), minimap);
+		GUI.EndGroup ();
 	}
 
 }

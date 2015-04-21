@@ -8,6 +8,7 @@ public class GameObjectList : MonoBehaviour {
 	public GameObject[] units;
 	public GameObject[] worldObjects;
 	public GameObject player;
+	public Player actualPlayer;
 
 	private static bool created = false;
 

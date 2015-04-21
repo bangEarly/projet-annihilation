@@ -20,7 +20,7 @@ public class UserInput : MonoBehaviour
 	void Update () 
 	{
 
-		if (player.human) 
+		if (player.human && RessourceManager.GetActualPlayer() == player) 
 		{
 			MoveCamera();
 			RotateCamera();
