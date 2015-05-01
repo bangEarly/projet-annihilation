@@ -19,8 +19,7 @@ public class UserInput : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-
-		if (player.human && RessourceManager.GetActualPlayer() == player) 
+		if (player.human || ((Network.isClient || Network.isServer) && player.GetComponent<NetworkView>().isMine)) 
 		{
 			MoveCamera();
 			RotateCamera();

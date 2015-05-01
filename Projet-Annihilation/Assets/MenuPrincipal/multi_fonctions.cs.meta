@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b97eac7d63737ed40a2c3310f3fc0466
+timeCreated: 1430425461
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - networkMaster: {fileID: 170312, guid: 6154d01ef0aa93b4fadf8eca2c71be5d, type: 2}
+  - startNetwork: {instanceID: 0}
+  - separation: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

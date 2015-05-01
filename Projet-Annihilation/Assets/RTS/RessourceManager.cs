@@ -67,11 +67,6 @@ namespace RTS {
 			return gameObjectList.GetPlayerObject ();
 		}
 
-		public static Player GetActualPlayer ()
-		{
-			return gameObjectList.actualPlayer;
-		}
-
 		public static Texture2D GetBuildImage(string name)
 		{
 			return gameObjectList.GetBuildImage(name);
@@ -84,8 +79,26 @@ namespace RTS {
 		public static Texture2D ResourceHealthBar { get { return resourceHealthTexture; } }
 		public static Texture2D ConstructionTexture { get { return constructionTexture; } }
 
+		private static GameInfos gameInfos;
+		public static void SetGameInfos(GameInfos infos)
+		{
+			gameInfos = infos;
+		}
 
+		public static Player GetActualPlayer ()
+		{
+			return gameInfos.actualPlayer;
+		}
 
+		public static void SetActualPlayer (Player actualPlayer)
+		{
+			gameInfos.actualPlayer = actualPlayer;
+		}
+
+		public static bool networkIsConnected()
+		{
+			return (Network.isClient || Network.isServer);
+		}
 	}
 
 }

@@ -34,6 +34,8 @@ public class WorldObject : MonoBehaviour {
 	public bool isAttacked = false;
 	public float onAttackTimer = 20.0f;
 
+	private NetworkView networkview;
+
 	protected virtual void Awake()
 	{
 		selectionBounds = RessourceManager.InvalidBounds;
@@ -44,6 +46,7 @@ public class WorldObject : MonoBehaviour {
 	protected virtual void Start () 
 	{
 		SetPlayer ();
+		networkview = transform.GetComponent<NetworkView> ();
 	}
 	
 	// Update is called once per frame
@@ -376,6 +379,8 @@ public class WorldObject : MonoBehaviour {
 	public void TakeDamage(int damage)
 	{
 		hitPoints -= damage;
+		if (RessourceManager.networkIsConnected ()) {
+		}
 		if (hitPoints <= 0)
 		{
 			Destroy(gameObject);

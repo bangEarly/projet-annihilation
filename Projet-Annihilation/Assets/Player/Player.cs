@@ -105,8 +105,18 @@ public class Player : MonoBehaviour {
 		Debug.Log ("add" + unitName + "to player");
 
 		Units units = GetComponentInChildren< Units > ();
-		GameObject newUnit = (GameObject)Instantiate (RessourceManager.GetUnit (unitName), spawnPoint, rotation);
-		newUnit.transform.parent = units.transform;
+		if (RessourceManager.networkIsConnected()) 
+		{
+			GameObject newUnit = (GameObject)Network.Instantiate (RessourceManager.GetUnit (unitName), spawnPoint, rotation, 0);
+			newUnit.transform.parent = units.transform;
+		} 
+		else 
+		{
+			GameObject newUnit = (GameObject)Instantiate (RessourceManager.GetUnit (unitName), spawnPoint, rotation);
+			newUnit.transform.parent = units.transform;
+		}
+
+
 	}
 
 	public void CreatBuilding(string buildingName, Vector3 buildPoint, Unit creator, Rect playingArea)
