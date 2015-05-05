@@ -1,6 +1,7 @@
 *
 {
 	text-align: justify;
+	/*police spéciale*/
 }
 
 h1
@@ -12,4 +13,9 @@ body
 {
 	background-color: maroon;
 	color:white;
+}
+
+p
+{
+	/*Cadre*/
 }
