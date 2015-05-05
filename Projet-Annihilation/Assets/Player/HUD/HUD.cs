@@ -87,7 +87,7 @@ public class HUD : MonoBehaviour {
 	// Update is called once per frame
 	void OnGUI () 
 	{
-		if (player && player.human && RessourceManager.GetActualPlayer() == player) 
+		if (player && player.human && (!RessourceManager.networkIsConnected() || player.GetComponent<NetworkView>().isMine) ) 
 		{
 			DrawResourceBar ();
 			//DrawMiniMap();
@@ -137,6 +137,7 @@ public class HUD : MonoBehaviour {
 
 		string selectionName = player.SelectedObject.objectName;
 		Building building = player.SelectedObject.GetComponent<Building>();
+		//Debug.Log(player.SelectedObject.IsOwnedBy (player));
 		if (player.SelectedObject.IsOwnedBy (player) && ((building && building.isBuilt()) || (!building))) 
 		{
 			if (lastSelection && lastSelection != player.SelectedObject) 

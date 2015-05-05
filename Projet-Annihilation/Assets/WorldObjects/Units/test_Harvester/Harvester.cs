@@ -32,7 +32,7 @@ public class Harvester : Unit
 
 		if ((transform.position.x - destination.x < 0.5 && transform.position.x - destination.x > -0.5) && 
 		    (transform.position.y - destination.y < 1  && transform.position.y - destination.y > -1) && 
-		    (transform.position.z - destination.z < 0.5 && transform.position.z - destination.z > -0.5)) 
+		    (transform.position.z - destination.z < 0.5 && transform.position.z - destination.z > -0.5) && agent.velocity == new Vector3(0,0,0)) 
 		{
 
 			if (harvesting || emptying) 

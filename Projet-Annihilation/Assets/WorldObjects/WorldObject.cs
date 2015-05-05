@@ -9,14 +9,14 @@ public class WorldObject : MonoBehaviour {
 	public Texture2D buildImage;
 	public int /*cost, sellValue,*/ hitPoints, maxHitPoints, costCrystalite, costDilithium, costPower;
 
-	protected Player player;
+	public Player player;
 	protected string[] actions = {};
 	public bool currentlySelected = false;
 
 	public Bounds selectionBounds;
 	protected Rect playingArea = new Rect(0.0f, 0.0f, 0.0f, 0.0f);
 
-	private List< Material > oldMaterials = new List<Material> ();
+	protected List< Material > oldMaterials = new List<Material> ();
 
 	protected GUIStyle healthStyle = new GUIStyle();
 	protected float healthPercentage = 1.0f;
@@ -34,7 +34,7 @@ public class WorldObject : MonoBehaviour {
 	public bool isAttacked = false;
 	public float onAttackTimer = 20.0f;
 
-	private NetworkView networkview;
+	public NetworkView networkview;
 
 	protected virtual void Awake()
 	{
@@ -379,13 +379,29 @@ public class WorldObject : MonoBehaviour {
 	public void TakeDamage(int damage)
 	{
 		hitPoints -= damage;
-		if (RessourceManager.networkIsConnected ()) {
+		if (RessourceManager.networkIsConnected ()) 
+		{
+			networkview.RPC("SyncLife", RPCMode.AllBuffered, hitPoints);
 		}
 		if (hitPoints <= 0)
 		{
 			Destroy(gameObject);
+			if (RessourceManager.networkIsConnected())
+			{
+				Network.Destroy(networkview.viewID);
+			}
 		}
 		onAttackTimer = 20.0f;
+	}
+
+	public void SetPlayer(Player player)
+	{
+		this.player = player;
+	}
+
+	[RPC] void SyncLife(int life)
+	{
+		hitPoints = life;
 	}
 
 }

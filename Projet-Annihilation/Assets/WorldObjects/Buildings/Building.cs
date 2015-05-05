@@ -102,16 +102,29 @@ public class Building : WorldObject {
 	{
 		CalculateBounds ();
 		needsBuilding = true;
-		hitPoints = 0;
+		hitPoints = 1;
 	}
 
 	public void Construct(float work)
 	{
 		workLeft -= work;
+		if (RessourceManager.networkIsConnected ()) 
+		{
+			networkview.RPC ("SyncWorkLeft", RPCMode.AllBuffered, workLeft);
+		}
 		if (workLeft <= 0) 
 		{
-			workLeft = 0;
-			RestoreMaterials();
+			if (RessourceManager.networkIsConnected())
+			{
+				networkview.RPC ("ConstructionFinished", RPCMode.AllBuffered);
+			}
+			else
+			{
+				workLeft = 0;
+				hitPoints = maxHitPoints;
+				RestoreMaterials();
+			}
+
 		}
 	}
 
@@ -132,6 +145,53 @@ public class Building : WorldObject {
 		{
 			base.DrawSelectionBox(selectBox);
 		}
+	}
+
+	public void DestroyObject()
+	{
+		Destroy (gameObject);
+	}
+
+	[RPC] void SetMaterial(Material material, bool storeExistingMaterial)
+	{
+		if (storeExistingMaterial) 
+		{
+			oldMaterials.Clear();
+		}
+		Renderer[] renderers = GetComponentsInChildren< Renderer > ();
+		foreach (Renderer renderer in renderers) 
+		{
+			if (storeExistingMaterial)
+			{
+				oldMaterials.Add(renderer.material);
+			}
+			renderer.material = material;
+		}
+	}
+
+	[RPC] void RPCStartConstruction()
+	{
+		CalculateBounds ();
+		needsBuilding = true;
+		hitPoints = 1;
+	}
+
+	[RPC] void SyncWorkLeft(float work)
+	{
+		workLeft = work;
+	}
+
+	[RPC] void ConstructionFinished()
+	{
+		workLeft = 0;
+		hitPoints = maxHitPoints;
+		RestoreMaterials();
+	}
+
+	[RPC] void SetParent()
+	{
+		Buildings buildings = player.transform.GetComponent<Buildings> ();
+		transform.parent = buildings.transform;
 	}
 
 }

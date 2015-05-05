@@ -13,7 +13,7 @@ public class Player : MonoBehaviour {
 	public Material notAllowedMaterial, allowedMaterial, inConstructionMaterial;
 
 	private Building tempBuilding;
-	private Unit tempCreator;
+	private Unit tempCreator, unitToAdd;
 	private bool findingPlacement = false;
 
 	//ressources
@@ -21,6 +21,8 @@ public class Player : MonoBehaviour {
 	private Dictionary< ResourceType, int> resources, resourceLimits;
 
 	public int test = 0;
+
+	public int teamNumber;
 
 	public Color teamColor;
 
@@ -108,7 +110,11 @@ public class Player : MonoBehaviour {
 		if (RessourceManager.networkIsConnected()) 
 		{
 			GameObject newUnit = (GameObject)Network.Instantiate (RessourceManager.GetUnit (unitName), spawnPoint, rotation, 0);
-			newUnit.transform.parent = units.transform;
+			unitToAdd = newUnit.GetComponent<Unit>();
+			NetworkView playerView = transform.GetComponent<NetworkView>();
+			playerView.RPC("SetPlayerToUnit", RPCMode.AllBuffered);
+			newUnit.transform.GetComponent<NetworkView>().RPC("SetParent", RPCMode.AllBuffered);
+			//newUnit.transform.parent = units.transform;
 		} 
 		else 
 		{
@@ -201,15 +207,42 @@ public class Player : MonoBehaviour {
 	{
 		findingPlacement = false;
 		Buildings buildings = GetComponentInChildren< Buildings > ();
-		if (buildings) 
+		if (RessourceManager.networkIsConnected())
 		{
-			tempBuilding.transform.parent = buildings.transform;
+			Debug.Log(tempBuilding.transform.position);
+			GameObject networkBuilding = (GameObject)Network.Instantiate(RessourceManager.GetBuilding(tempBuilding.name.Replace("(Clone)", "")), tempBuilding.transform.position, tempBuilding.transform.rotation, 0);
+			Debug.Log(networkBuilding.transform.position);
+			tempBuilding.DestroyObject();
+			tempBuilding = networkBuilding.GetComponent<Building>();
+			NetworkView tempBuildingView = tempBuilding.GetComponent<NetworkView>();
+			NetworkView playerView = transform.GetComponent<NetworkView>();
+			playerView.RPC ("SetPlayerToObject", RPCMode.AllBuffered);
+			tempBuildingView.RPC ("SetParent", RPCMode.AllBuffered);
+			//if (buildings) 
+			//{
+			//	tempBuilding.transform.parent = buildings.transform;
+			//}
+			//tempBuilding.SetPlayer();
+			//tempBuildingView.RPC("RPCSetMaterial", RPCMode.AllBuffered, inConstructionMaterial, true);
+			tempBuildingView.RPC("RPCStartConstruction", RPCMode.AllBuffered);
+			//NetworkView tempCreatorView = tempCreator.GetComponent<NetworkView>();
+			playerView.RPC("SetBuildingToWorker", RPCMode.AllBuffered);
+			tempBuilding.SetTransparentMaterial (inConstructionMaterial, true);
 		}
-		tempBuilding.SetPlayer ();
-		tempBuilding.SetColliders (true);
-		tempBuilding.SetTransparentMaterial (inConstructionMaterial, false);
+		else
+		{
+			if (buildings) 
+			{
+				tempBuilding.transform.parent = buildings.transform;
+			}
+			tempBuilding.SetPlayer ();
+			tempBuilding.SetColliders (true);
+
+			tempBuilding.StartConstruction ();
+			tempBuilding.SetTransparentMaterial (inConstructionMaterial, false);
+		}
+
 		tempCreator.SetBuilding (tempBuilding);
-		tempBuilding.StartConstruction ();
 		float spawnX = tempBuilding.selectionBounds.center.x + tempBuilding.transform.forward.x * tempBuilding.selectionBounds.extents.x + tempBuilding.transform.forward.x * (float)1.5;
 		float spawnZ = tempBuilding.selectionBounds.center.z + tempBuilding.transform.forward.z * tempBuilding.selectionBounds.extents.z + tempBuilding.transform.forward.z * (float)1.5;
 		tempBuilding.spawnPoint = new Vector3 (spawnX, 0.0f, spawnZ);
@@ -224,6 +257,36 @@ public class Player : MonoBehaviour {
 		Destroy (tempBuilding.gameObject);
 		tempBuilding = null;
 		tempCreator = null;
+	}
+
+	[RPC] void SetUsername(string username)
+	{
+		this.username = username;
+	}
+
+	[RPC] void SetTeamNumber(int number)
+	{
+		teamNumber = teamNumber;
+	}
+
+	[RPC] void SetHuman()
+	{
+		human = true;
+	}
+
+	[RPC] void SetPlayerToBuilding()
+	{
+		tempBuilding.SetPlayer (this);
+	}
+
+	[RPC] void SetPlayerToUnit()
+	{
+		unitToAdd.SetPlayer (this);
+	}
+
+	[RPC] void SetBuildingToWorker()
+	{
+		tempCreator.GoToBuilding (tempBuilding);
 	}
 
 }

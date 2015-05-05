@@ -23,9 +23,7 @@ public class Worker : Unit {
 	{
 		base.Update ();
 
-		if ((transform.position.x - destination.x < 0.5 && transform.position.x - destination.x > -0.5) && 
-			(transform.position.y - destination.y < 1 && transform.position.y - destination.y > -1) && 
-			(transform.position.z - destination.z < 0.5 && transform.position.z - destination.z > -0.5)) 
+		if (agent.velocity == new Vector3 (0,0,0)) 
 		{
 
 			if (building)
@@ -99,4 +97,5 @@ public class Worker : Unit {
 			}
 		}
 	}
+
 }

@@ -9,7 +9,7 @@ public class Unit : WorldObject
 	protected Vector3 destination;
 	private Quaternion targetRotation;
 	public float moveSpeed, rotateSpeed;
-	private NavMeshAgent agent;
+	protected NavMeshAgent agent;
 
 	protected override void Awake () 
 	{
@@ -26,15 +26,18 @@ public class Unit : WorldObject
 	protected override void Update ()
 	{	
 		base.Update ();
-		if ((transform.position.x - destination.x < 0.5 && transform.position.x - destination.x > -0.5) && 
-			(transform.position.y - destination.y < 1 && transform.position.y - destination.y > -1) && 
-			(transform.position.z - destination.z < 0.5 && transform.position.z - destination.z > -0.5)) 
+
+		if (agent.velocity == Vector3.zero) 
 		{
 			movingIntoPosition = false;
 		} 
 		else 
 		{
 			CalculateBounds ();
+			if (RessourceManager.networkIsConnected())
+			{
+				networkview.RPC("SyncPosition", RPCMode.AllBuffered, transform.position);
+			}
 		}
 	}
 
@@ -60,7 +63,7 @@ public class Unit : WorldObject
 	{
 		base.MouseClick (hitObject, hitPoint, controller);
 
-		if (player && player.human && currentlySelected) 
+		if (player && player.human && currentlySelected && (!RessourceManager.networkIsConnected() || player.GetComponent<NetworkView>().isMine)) 
 		{
 			if (hitObject.name == "Ground" && hitPoint != RessourceManager.InvalidPosition)
 			{
@@ -123,6 +126,23 @@ public class Unit : WorldObject
 
 	public virtual void SetBuilding(Building creator)
 	{
+	}
+
+	public virtual void GoToBuilding(Building project)
+	{
+	}
+
+	[RPC] void SyncPosition(Vector3 position)
+	{
+		transform.position = position;
+		destination = position;
+		CalculateBounds ();
+	}
+
+	[RPC] void SetParent()
+	{
+		Units buildings = player.transform.GetComponent<Units> ();
+		transform.parent = buildings.transform;
 	}
 
 }
