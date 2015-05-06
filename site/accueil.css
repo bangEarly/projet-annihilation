@@ -1,18 +1,32 @@
+@font-face { /* Définition d'une nouvelle police*/
+    font-family: 'lane_-_narrowregular';
+    src: url('LANENAR_-webfont.eot');
+    src: url('LANENAR_-webfont.eot?#iefix') format('embedded-opentype'),
+         url('LANENAR_-webfont.woff') format('woff'),
+         url('LANENAR_-webfont.ttf') format('truetype'),
+         url('LANENAR_-webfont.svg#lane_-_narrowregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
 *
 {
 	text-align: justify;
-	/*police spéciale*/
+	font:'lane_-_narrowregular', Arial, serif;
 }
 
-h1
+h1,h2,h3
 {
 	text-align: center;
+	text-shadow: 2px 2px 4px blue; /*Ombre sous le titre: décalage horizontal, décalage vertical, adoucissement, couleur */
 }
 
 body
 {
 	background-color: maroon;
 	color:white;
+	background:  url("fond_3.jpg") no-repeat;
 }
 
 p
@@ -55,4 +69,5 @@ a:hover /*Lorsqu'on passe la souris sur les liens */
 a:visited /*Lorsqu'on a déjà visité la page */
 {
 	color: white;
+	text-shadow: 2px 2px 4px blue;
 }
