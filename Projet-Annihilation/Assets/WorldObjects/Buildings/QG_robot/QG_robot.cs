@@ -7,7 +7,7 @@ public class QG_robot : Building
 	protected override void Start () 
 	{
 		base.Start ();
-		actions = new string[] {"Worker"};
+		actions = new string[] {"worker"};
 		maxBuildProgress = 10.0f;
 	}
 

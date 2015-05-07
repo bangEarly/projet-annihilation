@@ -96,16 +96,7 @@ public class HUD : MonoBehaviour {
 				DrawOrdersBar ();
 				if (notEnoughtResourceTimer > 0)
 				{
-					if (!transform.GetChild(0).GetComponent<Canvas>().enabled)
-					{
-						transform.GetChild(0).GetComponent<Canvas>().enabled = true;
-					}
-					notEnoughtResourceTimer -= Time.deltaTime;
-					if (notEnoughtResourceTimer <= 0)
-					{
-						transform.GetChild(0).GetComponent<Canvas>().enabled = false;
-					}
-					
+					PrintNotEnoughResource();
 				}
 			}
 			DrawMouseCursor ();
@@ -420,6 +411,14 @@ public class HUD : MonoBehaviour {
 		GUI.BeginGroup (new Rect (0, Screen.height - Screen.height / 5, Screen.height / 5, Screen.height / 5));
 		GUI.Box (new Rect (0, 0, Screen.height / 5, Screen.height / 5), minimap);
 		GUI.EndGroup ();
+	}
+
+	public void PrintNotEnoughResource()
+	{
+		GUI.BeginGroup (GetPlayingArea ());
+		GUI.TextArea (new Rect (Screen.width / 2, Screen.height / 3, 160, 20), "Not enough resources!");
+		GUI.EndGroup ();
+		notEnoughtResourceTimer -= Time.deltaTime;
 	}
 
 }

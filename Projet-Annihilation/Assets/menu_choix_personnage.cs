@@ -97,7 +97,8 @@ public class menu_choix_personnage : MonoBehaviour
 				int new_number = 1;
 				if (Int32.TryParse(new_teamNumber, out new_number) && new_number < 9 && new_number > 0)
 				{
-					listPlayerInfos[i - 1].teamNumber = new_number;
+					//listPlayerInfos[i - 1].teamNumber = new_number;
+					playerInfosView.RPC ("SetPlayerNumber", RPCMode.AllBuffered, new_number);
 				}
 				else if (new_teamNumber == "")
 				{
