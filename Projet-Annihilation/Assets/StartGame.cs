@@ -33,6 +33,7 @@ public class StartGame : MonoBehaviour {
 			RessourceManager.SetActualPlayer (player);
 			Camera.main.transform.position = new Vector3(player.transform.position.x, Camera.main.transform.position.y, player.transform.position.z);
 		}
+
 	}
 
 }

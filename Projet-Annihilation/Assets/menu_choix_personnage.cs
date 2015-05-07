@@ -84,11 +84,24 @@ public class menu_choix_personnage : MonoBehaviour
 					listPlayerInfos[i - 1].GetComponent<NetworkView>().RPC("SetUsername", RPCMode.AllBuffered, new_name);
 					listPlayerInfos[i - 1].username = new_name;
 				}
-				string new_teamNumber = GUI.TextField (new Rect(10 + 3 * (Screen.width / 2 - Screen.width / 8) / 5, space * (i + 1) + backgroundHeight * i, (Screen.width / 2 - Screen.width / 8) / 5, backgroundHeight), listPlayerInfos[i - 1].teamNumber.ToString());
+				string numberShown = listPlayerInfos[i - 1].teamNumber.ToString();
+				string new_teamNumber;
+				if (numberShown == "0")
+				{
+					new_teamNumber = GUI.TextField (new Rect(10 + 3 * (Screen.width / 2 - Screen.width / 8) / 5, space * (i + 1) + backgroundHeight * i, (Screen.width / 2 - Screen.width / 8) / 5, backgroundHeight), "");
+				}
+				else
+				{
+					new_teamNumber = GUI.TextField (new Rect(10 + 3 * (Screen.width / 2 - Screen.width / 8) / 5, space * (i + 1) + backgroundHeight * i, (Screen.width / 2 - Screen.width / 8) / 5, backgroundHeight), listPlayerInfos[i - 1].teamNumber.ToString());
+				}
 				int new_number = 1;
 				if (Int32.TryParse(new_teamNumber, out new_number) && new_number < 9 && new_number > 0)
 				{
 					listPlayerInfos[i - 1].teamNumber = new_number;
+				}
+				else if (new_teamNumber == "")
+				{
+					listPlayerInfos[i - 1].teamNumber = 0;
 				}
 				
 				string readyButtonString;

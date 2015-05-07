@@ -28,7 +28,7 @@ public class Building : WorldObject {
 		float spawnX = selectionBounds.center.x + transform.forward.x * selectionBounds.extents.x + transform.forward.x * 20;
 		float spawnZ = selectionBounds.center.z + transform.forward.z * selectionBounds.extents.z + transform.forward.z * 20;
 		spawnPoint = new Vector3 (spawnX, 0.0f, spawnZ);
-		workLeft = maxWork;
+		//workLeft = maxWork;
 	}
 	
 	// Update is called once per frame

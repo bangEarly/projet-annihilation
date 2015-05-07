@@ -111,7 +111,7 @@ public class WorldObject : MonoBehaviour {
 				{
 					if (player && player.human) 
 					{
-						if (player.teamColor != owner.teamColor && CanAttack ()) 
+						if (player.teamNumber != owner.teamNumber && CanAttack ()) 
 						{
 							BeginAttack (worldObject);
 						}
@@ -169,7 +169,7 @@ public class WorldObject : MonoBehaviour {
 				Building building = hoverObject.transform.parent.GetComponent < Building > ();
 				if (owner)
 				{
-					if (owner.username != player.username && CanAttack())
+					if (owner.teamNumber != player.teamNumber && CanAttack())
 					{
 						player.hud.SetCursorState(CursorState.Attack);
 					}
