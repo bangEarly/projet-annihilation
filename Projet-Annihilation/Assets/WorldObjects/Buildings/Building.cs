@@ -105,7 +105,7 @@ public class Building : WorldObject {
 		hitPoints = 1;
 	}
 
-	public void Construct(float work)
+	public virtual void Construct(float work)
 	{
 		workLeft -= work;
 		if (RessourceManager.networkIsConnected ()) 
@@ -190,8 +190,9 @@ public class Building : WorldObject {
 
 	[RPC] void SetParent()
 	{
-		Buildings buildings = player.transform.GetComponent<Buildings> ();
+		Buildings buildings = tempPlayer.transform.GetComponentInChildren<Buildings> ();
 		transform.parent = buildings.transform;
+		player = transform.root.GetComponent<Player> ();
 	}
 
 }

@@ -17,7 +17,7 @@ public class Player : MonoBehaviour {
 	private bool findingPlacement = false;
 
 	//ressources
-	public int startCrystalite, startCrystaliteLimit, startDilithium, startDilithiudLimit,startPower, startPowerLimit;
+	public int startCrystalite, startCrystaliteLimit, startDilithium, startDilithiudLimit, startPower;
 	private Dictionary< ResourceType, int> resources, resourceLimits;
 
 	public int test = 0;
@@ -75,7 +75,10 @@ public class Player : MonoBehaviour {
 
 	public void AddResource(ResourceType type, int amount)
 	{
-		resources [type] += amount;
+		if (resources [type] + amount <= resourceLimits [type]) 
+		{
+			resources [type] += amount;
+		}
 	}
 
 	public int GetResource(ResourceType resource)
@@ -92,7 +95,7 @@ public class Player : MonoBehaviour {
 	{
 		IncrementResourceLimit (ResourceType.Crystalite, startCrystaliteLimit);
 		IncrementResourceLimit (ResourceType.Dilithium, startDilithiudLimit);
-		IncrementResourceLimit (ResourceType.Power, startPowerLimit);
+		IncrementResourceLimit (ResourceType.Power, 10000000);
 	}
 
 	private void AddStartResources()
@@ -209,14 +212,14 @@ public class Player : MonoBehaviour {
 		Buildings buildings = GetComponentInChildren< Buildings > ();
 		if (RessourceManager.networkIsConnected())
 		{
-			Debug.Log(tempBuilding.transform.position);
+
 			GameObject networkBuilding = (GameObject)Network.Instantiate(RessourceManager.GetBuilding(tempBuilding.name.Replace("(Clone)", "")), tempBuilding.transform.position, tempBuilding.transform.rotation, 0);
-			Debug.Log(networkBuilding.transform.position);
+
 			tempBuilding.DestroyObject();
 			tempBuilding = networkBuilding.GetComponent<Building>();
 			NetworkView tempBuildingView = tempBuilding.GetComponent<NetworkView>();
 			NetworkView playerView = transform.GetComponent<NetworkView>();
-			playerView.RPC ("SetPlayerToObject", RPCMode.AllBuffered);
+			playerView.RPC ("SetPlayerToBuilding", RPCMode.AllBuffered);
 			tempBuildingView.RPC ("SetParent", RPCMode.AllBuffered);
 			//if (buildings) 
 			//{
@@ -241,7 +244,10 @@ public class Player : MonoBehaviour {
 			tempBuilding.StartConstruction ();
 			tempBuilding.SetTransparentMaterial (inConstructionMaterial, false);
 		}
-
+		//if (buildings) 
+		//{
+		//	tempBuilding.transform.parent = buildings.transform;
+		//}
 		tempCreator.SetBuilding (tempBuilding);
 		float spawnX = tempBuilding.selectionBounds.center.x + tempBuilding.transform.forward.x * tempBuilding.selectionBounds.extents.x + tempBuilding.transform.forward.x * (float)1.5;
 		float spawnZ = tempBuilding.selectionBounds.center.z + tempBuilding.transform.forward.z * tempBuilding.selectionBounds.extents.z + tempBuilding.transform.forward.z * (float)1.5;
@@ -282,6 +288,7 @@ public class Player : MonoBehaviour {
 	[RPC] void SetPlayerToUnit()
 	{
 		unitToAdd.SetPlayer (this);
+
 	}
 
 	[RPC] void SetBuildingToWorker()

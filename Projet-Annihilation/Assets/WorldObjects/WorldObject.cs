@@ -9,7 +9,7 @@ public class WorldObject : MonoBehaviour {
 	public Texture2D buildImage;
 	public int /*cost, sellValue,*/ hitPoints, maxHitPoints, costCrystalite, costDilithium, costPower;
 
-	public Player player;
+	public Player player, tempPlayer;
 	protected string[] actions = {};
 	public bool currentlySelected = false;
 
@@ -251,6 +251,7 @@ public class WorldObject : MonoBehaviour {
 	public void SetPlayer()
 	{
 		player = transform.root.GetComponent/*InChildren*/< Player > ();
+		Debug.Log ("1");
 	}
 
 	protected virtual void CalculateCurrentHealth()
@@ -396,7 +397,7 @@ public class WorldObject : MonoBehaviour {
 
 	public void SetPlayer(Player player)
 	{
-		this.player = player;
+		tempPlayer = player;
 	}
 
 	[RPC] void SyncLife(int life)

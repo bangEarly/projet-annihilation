@@ -140,6 +140,7 @@ public class HUD : MonoBehaviour {
 		//Debug.Log(player.SelectedObject.IsOwnedBy (player));
 		if (player.SelectedObject.IsOwnedBy (player) && ((building && building.isBuilt()) || (!building))) 
 		{
+			//Debug.Log ("caca");
 			if (lastSelection && lastSelection != player.SelectedObject) 
 			{
 				sliderValue = 0.0f;

@@ -141,8 +141,9 @@ public class Unit : WorldObject
 
 	[RPC] void SetParent()
 	{
-		Units buildings = player.transform.GetComponent<Units> ();
+		Units buildings = tempPlayer.transform.GetComponentInChildren<Units> ();
 		transform.parent = buildings.transform;
+		player = transform.root.GetComponent<Player> ();
 	}
 
 }
