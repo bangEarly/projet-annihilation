@@ -99,6 +99,23 @@ namespace RTS {
 		{
 			return (Network.isClient || Network.isServer);
 		}
+
+		public static void AddPlayerToList(Player player)
+		{
+			gameInfos.players.Add (player);
+		}
+
+		public static Player GetPlayer(NetworkView view)
+		{
+			for (int i = 0; i < gameInfos.players.Count; i++) 
+			{
+				if (view.owner == gameInfos.players[i].GetComponent<NetworkView>().owner)
+				{
+					return gameInfos.players[i];
+				}
+			}
+			return null;
+		}
 	}
 
 }

@@ -17,7 +17,7 @@ public class Player : MonoBehaviour {
 	private bool findingPlacement = false;
 
 	//ressources
-	public int startCrystalite, startCrystaliteLimit, startDilithium, startDilithiudLimit, startPower;
+	public int startCrystalite, startCrystaliteLimit, startDilithium, startDilithiumLimit, startPower;
 	private Dictionary< ResourceType, int> resources, resourceLimits;
 
 	public int test = 0;
@@ -38,8 +38,9 @@ public class Player : MonoBehaviour {
 		hud = GetComponentInChildren< HUD > ();
 
 		//ajout des ressources de depart ainsi que la limite des ressources de depart
-		AddStartResources ();
 		AddStartResourceLimits ();
+		AddStartResources ();
+
 	}
 	
 	// Update is called once per frame
@@ -94,7 +95,7 @@ public class Player : MonoBehaviour {
 	private void AddStartResourceLimits()
 	{
 		IncrementResourceLimit (ResourceType.Crystalite, startCrystaliteLimit);
-		IncrementResourceLimit (ResourceType.Dilithium, startDilithiudLimit);
+		IncrementResourceLimit (ResourceType.Dilithium, startDilithiumLimit);
 		IncrementResourceLimit (ResourceType.Power, 10000000);
 	}
 
@@ -110,7 +111,7 @@ public class Player : MonoBehaviour {
 		Debug.Log ("add" + unitName + "to player");
 
 		Units units = GetComponentInChildren< Units > ();
-		if (RessourceManager.networkIsConnected()) 
+		if (RessourceManager.networkIsConnected() && transform.GetComponent<NetworkView>().isMine) 
 		{
 			GameObject newUnit = (GameObject)Network.Instantiate (RessourceManager.GetUnit (unitName), spawnPoint, rotation, 0);
 			unitToAdd = newUnit.GetComponent<Unit>();
@@ -202,6 +203,11 @@ public class Player : MonoBehaviour {
 					canPlace = false;
 				}
 			}
+			else if ((hitObject && hitObject.name == "Ground") || (tempBuilding.transform.position.y < Terrain.activeTerrain.SampleHeight(tempBuilding.transform.position)))
+			{
+				Vector3 temp = new Vector3 (tempBuilding.transform.position.x, Terrain.activeTerrain.SampleHeight(tempBuilding.transform.position), tempBuilding.transform.position.z);
+				tempBuilding.transform.position = temp;
+			}
 		}
 		return canPlace;
 	}
@@ -210,7 +216,7 @@ public class Player : MonoBehaviour {
 	{
 		findingPlacement = false;
 		Buildings buildings = GetComponentInChildren< Buildings > ();
-		if (RessourceManager.networkIsConnected())
+		if (RessourceManager.networkIsConnected() && transform.GetComponent<NetworkView>().isMine)
 		{
 
 			GameObject networkBuilding = (GameObject)Network.Instantiate(RessourceManager.GetBuilding(tempBuilding.name.Replace("(Clone)", "")), tempBuilding.transform.position, tempBuilding.transform.rotation, 0);
@@ -244,10 +250,6 @@ public class Player : MonoBehaviour {
 			tempBuilding.StartConstruction ();
 			tempBuilding.SetTransparentMaterial (inConstructionMaterial, false);
 		}
-		//if (buildings) 
-		//{
-		//	tempBuilding.transform.parent = buildings.transform;
-		//}
 		tempCreator.SetBuilding (tempBuilding);
 		float spawnX = tempBuilding.selectionBounds.center.x + tempBuilding.transform.forward.x * tempBuilding.selectionBounds.extents.x + tempBuilding.transform.forward.x * (float)1.5;
 		float spawnZ = tempBuilding.selectionBounds.center.z + tempBuilding.transform.forward.z * tempBuilding.selectionBounds.extents.z + tempBuilding.transform.forward.z * (float)1.5;
@@ -288,12 +290,16 @@ public class Player : MonoBehaviour {
 	[RPC] void SetPlayerToUnit()
 	{
 		unitToAdd.SetPlayer (this);
-
 	}
 
 	[RPC] void SetBuildingToWorker()
 	{
 		tempCreator.GoToBuilding (tempBuilding);
+	}
+
+	[RPC] void AddToList()
+	{
+		RessourceManager.AddPlayerToList (this);
 	}
 
 }

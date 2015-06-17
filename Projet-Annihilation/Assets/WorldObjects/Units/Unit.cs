@@ -34,7 +34,7 @@ public class Unit : WorldObject
 		else 
 		{
 			CalculateBounds ();
-			if (RessourceManager.networkIsConnected())
+			if (RessourceManager.networkIsConnected() && networkview.isMine)
 			{
 				networkview.RPC("SyncPosition", RPCMode.AllBuffered, transform.position);
 			}

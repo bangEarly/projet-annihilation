@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using RTS;
 
 public class PlayerInfos : MonoBehaviour {
 
@@ -13,6 +14,8 @@ public class PlayerInfos : MonoBehaviour {
 	NetworkView playerInfosView;
 
 	private List<int> playerNumberList = new List<int>() {0, 1, 2, 3, 4, 5, 6, 7};
+
+	private Player player;
 	
 	void Awake()
 	{
@@ -26,14 +29,16 @@ public class PlayerInfos : MonoBehaviour {
 		{
 			StartGame startGame = Object.FindObjectOfType<StartGame>();
 			GameObject playerObject = (GameObject)Network.Instantiate(playerPrefab, startGame.listSpawnPosition[playerNumber], new Quaternion(0,0,0,0), 0);
-			Player player = playerObject.GetComponent<Player>();
+			player = playerObject.GetComponent<Player>();
 			NetworkView playerView = playerObject.GetComponent<NetworkView>();
 			player.username = username;
+			RessourceManager.SetActualPlayer (player);
 			playerView.RPC("SetUsername", RPCMode.AllBuffered, username); 
 			player.human = true;
 			playerView.RPC ("SetHuman", RPCMode.AllBuffered);
 			player.teamNumber = teamNumber;
 			playerView.RPC("SetTeamNumber", RPCMode.AllBuffered, teamNumber);
+			playerView.RPC ("AddToList", RPCMode.AllBuffered);
 			Camera.main.transform.position = new Vector3(startGame.listSpawnPosition[playerNumber].x, 40f, startGame.listSpawnPosition[playerNumber].z);
 			Network.Destroy(gameObject);
 		}
@@ -74,6 +79,11 @@ public class PlayerInfos : MonoBehaviour {
 	[RPC] public void RemoveNumber(int number)
 	{
 		playerNumberList.RemoveAt (0);
+	}
+
+	[RPC] public void SetTeamNumber(int number)
+	{
+		teamNumber = number;
 	}
 
 }

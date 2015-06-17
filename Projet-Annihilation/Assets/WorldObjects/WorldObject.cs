@@ -251,7 +251,6 @@ public class WorldObject : MonoBehaviour {
 	public void SetPlayer()
 	{
 		player = transform.root.GetComponent/*InChildren*/< Player > ();
-		Debug.Log ("1");
 	}
 
 	protected virtual void CalculateCurrentHealth()
@@ -394,10 +393,11 @@ public class WorldObject : MonoBehaviour {
 		}
 		onAttackTimer = 20.0f;
 	}
+	
 
 	public void SetPlayer(Player player)
 	{
-		tempPlayer = player;
+		RessourceManager.GetPlayer (networkview);
 	}
 
 	[RPC] void SyncLife(int life)

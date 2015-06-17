@@ -30,9 +30,7 @@ public class Harvester : Unit
 	{
 		base.Update ();
 
-		if ((transform.position.x - destination.x < 0.5 && transform.position.x - destination.x > -0.5) && 
-		    (transform.position.y - destination.y < 1  && transform.position.y - destination.y > -1) && 
-		    (transform.position.z - destination.z < 0.5 && transform.position.z - destination.z > -0.5) && agent.velocity == new Vector3(0,0,0)) 
+		if (agent.velocity == new Vector3(0,0,0)) 
 		{
 
 			if (harvesting || emptying) 
@@ -41,8 +39,8 @@ public class Harvester : Unit
 				foreach (Arms arm in arms) {
 					arm.GetComponent<Renderer> ().enabled = true;
 				}
-
-				if (harvesting) 
+				Debug.Log(Vector3.Distance(transform.position, resourceDeposit.transform.position));
+				if (harvesting && Vector3.Distance(transform.position, resourceDeposit.transform.position) < 10.0F ) 
 				{
 					Collect ();
 					if (currentLoad >= capacity || resourceDeposit.isEmpty ()) 
@@ -57,7 +55,7 @@ public class Harvester : Unit
 						StartMove (resourceStore.transform.position, resourceStore.gameObject);
 					}
 				} 
-				else 
+				else if (emptying && Vector3.Distance(transform.position, resourceStore.transform.position) < 25.0F) 
 				{
 					Deposit ();
 					if (currentLoad <= 0) 
