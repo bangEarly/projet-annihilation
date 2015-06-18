@@ -6,7 +6,7 @@ public class Unit : WorldObject
 {
 	//variables movement
 	protected bool moving, rotating;
-	protected Vector3 destination;
+	public Vector3 destination;
 	private Quaternion targetRotation;
 	public float moveSpeed, rotateSpeed;
 	protected NavMeshAgent agent;
@@ -36,7 +36,7 @@ public class Unit : WorldObject
 			CalculateBounds ();
 			if (RessourceManager.networkIsConnected() && networkview.isMine)
 			{
-				networkview.RPC("SyncPosition", RPCMode.AllBuffered, transform.position);
+				networkview.RPC("SyncPosition", RPCMode.Others, transform.position);
 			}
 		}
 	}
@@ -75,6 +75,7 @@ public class Unit : WorldObject
 				attacking = false;
 				target = null;
 				StartMove(destination);
+
 			}
 		}
 	}
@@ -82,6 +83,7 @@ public class Unit : WorldObject
 	public virtual void StartMove(Vector3 destination)
 	{
 		this.destination = destination;
+		agent.Resume ();
 		agent.SetDestination (destination);
 	}
 
@@ -135,15 +137,15 @@ public class Unit : WorldObject
 	[RPC] void SyncPosition(Vector3 position)
 	{
 		transform.position = position;
-		destination = position;
+		StartMove (position);
+		//destination = position;
 		CalculateBounds ();
 	}
 
 	[RPC] void SetParent()
 	{
-		Units buildings = tempPlayer.transform.GetComponentInChildren<Units> ();
-		transform.parent = buildings.transform;
-		player = transform.root.GetComponent<Player> ();
+		player = RessourceManager.GetPlayer(networkview);
+		transform.SetParent (player.GetComponentInChildren<Units> ().transform);
 	}
 
 }

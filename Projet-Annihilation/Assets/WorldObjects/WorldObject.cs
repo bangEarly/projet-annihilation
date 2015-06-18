@@ -289,11 +289,7 @@ public class WorldObject : MonoBehaviour {
 		{
 			AdjustPosition();
 		}
-		NavMeshAgent agent = transform.GetComponent< NavMeshAgent > (); //si l'unite etait en train de se deplacer, elle s'arrete
-		if (agent) 
-		{
-			agent.Stop();
-		}
+
 	}
 
 	private bool TargetInRange()
@@ -344,6 +340,11 @@ public class WorldObject : MonoBehaviour {
 			else if (ReadyToFire ()) 
 			{
 				UseWeapon ();
+				NavMeshAgent agent = transform.GetComponent< NavMeshAgent > (); //si l'unite etait en train de se deplacer, elle s'arrete
+				if (agent) 
+				{
+					agent.Stop();
+				}
 			}
 		} 
 		else 
@@ -385,19 +386,13 @@ public class WorldObject : MonoBehaviour {
 		}
 		if (hitPoints <= 0)
 		{
-			Destroy(gameObject);
 			if (RessourceManager.networkIsConnected())
 			{
 				Network.Destroy(networkview.viewID);
 			}
+			//Destroy(gameObject);
 		}
 		onAttackTimer = 20.0f;
-	}
-	
-
-	public void SetPlayer(Player player)
-	{
-		RessourceManager.GetPlayer (networkview);
 	}
 
 	[RPC] void SyncLife(int life)

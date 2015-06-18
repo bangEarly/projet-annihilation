@@ -28,10 +28,19 @@ public class Tank : Unit {
 		spawnpoint.x += (2.1f * transform.forward.x);
 		spawnpoint.y += 1.4f;
 		spawnpoint.z += (2.1f * transform.forward.z);
-		GameObject gameObject = (GameObject)Instantiate (RessourceManager.GetWorldObject ("LaserProjectile"), spawnpoint, transform.rotation);
-		Projectile projectile = gameObject.GetComponentInChildren< Projectile > ();
-		projectile.SetRange (0.9f * weaponRange);
-		projectile.SetTarget (target);
+		if (!RessourceManager.networkIsConnected ()) {
+			GameObject gameObject = (GameObject)Instantiate (RessourceManager.GetWorldObject ("LaserProjectile"), spawnpoint, transform.rotation);
+			Projectile projectile = gameObject.GetComponentInChildren< Projectile > ();
+			projectile.SetRange (0.9f * weaponRange);
+			projectile.SetTarget (target);
+		} 
+		else 
+		{
+			GameObject gameObject = (GameObject)Network.Instantiate (RessourceManager.GetWorldObject ("LaserProjectile"), spawnpoint, transform.rotation, 0);
+			NetworkView projectileView = gameObject.GetComponentInChildren<NetworkView>();
+			projectileView.RPC("initializeProjectile", RPCMode.AllBuffered, 0.9f * weaponRange);
+			gameObject.GetComponentInChildren<Projectile>().SetTarget(target);
+		}
 	}
 
 }

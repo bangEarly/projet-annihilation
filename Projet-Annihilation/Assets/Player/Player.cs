@@ -116,7 +116,7 @@ public class Player : MonoBehaviour {
 			GameObject newUnit = (GameObject)Network.Instantiate (RessourceManager.GetUnit (unitName), spawnPoint, rotation, 0);
 			unitToAdd = newUnit.GetComponent<Unit>();
 			NetworkView playerView = transform.GetComponent<NetworkView>();
-			playerView.RPC("SetPlayerToUnit", RPCMode.AllBuffered);
+			//playerView.RPC("SetPlayerToUnit", RPCMode.AllBuffered);
 			newUnit.transform.GetComponent<NetworkView>().RPC("SetParent", RPCMode.AllBuffered);
 			//newUnit.transform.parent = units.transform;
 		} 
@@ -225,7 +225,7 @@ public class Player : MonoBehaviour {
 			tempBuilding = networkBuilding.GetComponent<Building>();
 			NetworkView tempBuildingView = tempBuilding.GetComponent<NetworkView>();
 			NetworkView playerView = transform.GetComponent<NetworkView>();
-			playerView.RPC ("SetPlayerToBuilding", RPCMode.AllBuffered);
+			//playerView.RPC ("SetPlayerToBuilding", RPCMode.AllBuffered);
 			tempBuildingView.RPC ("SetParent", RPCMode.AllBuffered);
 			//if (buildings) 
 			//{
@@ -274,7 +274,7 @@ public class Player : MonoBehaviour {
 
 	[RPC] void SetTeamNumber(int number)
 	{
-		teamNumber = teamNumber;
+		teamNumber = number;
 	}
 
 	[RPC] void SetHuman()
@@ -282,15 +282,15 @@ public class Player : MonoBehaviour {
 		human = true;
 	}
 
-	[RPC] void SetPlayerToBuilding()
+	/*[RPC] void SetPlayerToBuilding()
 	{
 		tempBuilding.SetPlayer (this);
-	}
+	}*/
 
-	[RPC] void SetPlayerToUnit()
+	/*[RPC] void SetPlayerToUnit()
 	{
 		unitToAdd.SetPlayer (this);
-	}
+	}*/
 
 	[RPC] void SetBuildingToWorker()
 	{

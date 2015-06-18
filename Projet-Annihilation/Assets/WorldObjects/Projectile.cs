@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using RTS;
 
 public class Projectile : MonoBehaviour {
 
@@ -14,7 +15,10 @@ public class Projectile : MonoBehaviour {
 	{
 		if (HitSomething ()) 
 		{
-			InflictDamage();
+			if (!RessourceManager.networkIsConnected() || transform.GetComponent<NetworkView>().isMine)
+			{
+				InflictDamage();
+			}
 			Destroy(gameObject);
 		}
 		if (range > 0) 
@@ -50,6 +54,11 @@ public class Projectile : MonoBehaviour {
 		{
 			target.TakeDamage(damage);
 		}
+	}
+
+	[RPC] void initializeProjectile(float range)
+	{
+		this.range = range;
 	}
 
 }

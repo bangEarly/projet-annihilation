@@ -109,11 +109,12 @@ namespace RTS {
 		{
 			for (int i = 0; i < gameInfos.players.Count; i++) 
 			{
-				if (view.owner == gameInfos.players[i].GetComponent<NetworkView>().owner)
+				if (view.owner.Equals(gameInfos.players[i].GetComponent<NetworkView>().owner))
 				{
 					return gameInfos.players[i];
 				}
 			}
+			Debug.Log ("caca");
 			return null;
 		}
 	}

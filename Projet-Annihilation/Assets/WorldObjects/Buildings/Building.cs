@@ -190,9 +190,8 @@ public class Building : WorldObject {
 
 	[RPC] void SetParent()
 	{
-		Buildings buildings = tempPlayer.transform.GetComponentInChildren<Buildings> ();
-		transform.parent = buildings.transform;
-		player = transform.root.GetComponent<Player> ();
+		player = RessourceManager.GetPlayer (networkview);
+		transform.SetParent (player.GetComponentInChildren<Buildings> ().transform);
 	}
 
 }
