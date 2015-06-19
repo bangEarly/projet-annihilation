@@ -21,3 +21,7 @@ Projet-Annihilation/*.pidb.meta
 
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
+*.meta
+*.prefab
+*.meta
+*.meta
