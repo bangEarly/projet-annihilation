@@ -18,10 +18,18 @@ public class Resource : WorldObject
 	
 	public void Remove(float amount)
 	{
-		amountLeft -= amount;
-		if (amountLeft < 0) 
-		{
-			amountLeft = 0;
+		if (!RessourceManager.networkIsConnected()) {
+			amountLeft -= amount;
+			if (amountLeft <= 0) {
+				amountLeft = 0;
+				Destroy (gameObject);
+			}
+		} else {
+			networkview.RPC ("RpcRemove", RPCMode.AllBuffered, amount);
+			if (amountLeft <= 0)
+			{
+				Network.Destroy(networkview.viewID);
+			}
 		}
 	}
 
@@ -40,4 +48,13 @@ public class Resource : WorldObject
 		healthPercentage = amountLeft / capacity;
 		healthStyle.normal.background = RessourceManager.ResourceHealthBar;
 	}
+
+	[RPC] void RpcRemove(float amount)
+	{
+		amountLeft -= amount;
+		if (amountLeft < 0) {
+			amountLeft = 0;
+		}
+	}
+
 }

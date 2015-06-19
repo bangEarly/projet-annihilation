@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class HUD : MonoBehaviour {
 
 	//resource bar and orders bar display
-	public GUISkin ResourceSkin, OrdersSkin, selectBoxSkin;
+	public GUISkin ResourceSkin, OrdersSkin, selectBoxSkin, background;
 	private const int ORDERS_BAR_WIDTH = 150, RESOURCE_BAR_HEIGHT = 40;
 
 	//infos on the selection
@@ -100,6 +100,14 @@ public class HUD : MonoBehaviour {
 				}
 			}
 			DrawMouseCursor ();
+			if (player.isDead)
+			{
+				ShowDeathMenu();
+			}
+			else if (player.won)
+			{
+				ShowVictoryMenu();
+			}
 		}
 
 	}
@@ -203,7 +211,7 @@ public class HUD : MonoBehaviour {
 	{
 		bool mouseOverHUD = !MouseInBounds () && activeCursorState != CursorState.PanDown && activeCursorState != CursorState.PanUp && activeCursorState != CursorState.PanRight;
 
-		if (mouseOverHUD) 
+		if (mouseOverHUD || player.isDead || player.won) 
 		{
 			Cursor.visible = true;
 		} 
@@ -419,6 +427,45 @@ public class HUD : MonoBehaviour {
 		GUI.TextArea (new Rect (Screen.width / 2, Screen.height / 3, 160, 20), "Not enough resources!");
 		GUI.EndGroup ();
 		notEnoughtResourceTimer -= Time.deltaTime;
+	}
+
+	public void ShowDeathMenu()
+	{
+		GUI.skin = background;
+		GUI.BeginGroup (new Rect (3 * Screen.width / 8, 3 * Screen.height / 8, Screen.width / 4, Screen.height / 4));
+		GUI.Box (new Rect (0, 0, Screen.width / 4, Screen.height / 4), "");
+		GUI.Box (new Rect (0, 0, 3 * Screen.width / 8, 50), "You are dead!");
+		if (GUI.Button(new Rect(3 * Screen.width / 32, 3 * Screen.height / 16, 3 * Screen.width / 32, Screen.height / 16), "Main menu"))
+		{
+			GameObject[] objects = GameObject.FindObjectsOfType<GameObject>();
+			foreach (GameObject obj in objects) 
+			{
+				Destroy(obj);
+			}
+			
+			Application.LoadLevel(0);
+			Application.LoadLevel(0);
+		}
+		GUI.EndGroup ();
+	}
+
+	public void ShowVictoryMenu()
+	{
+		GUI.skin = background;
+		GUI.BeginGroup (new Rect (3 * Screen.width / 8, 3 * Screen.height / 8, Screen.width / 4, Screen.height / 4));
+		GUI.Box (new Rect (0, 0, Screen.width / 4, Screen.height / 4), "");
+		GUI.Box (new Rect (0, 0, Screen.width / 8, 50), "You won!");
+		if (GUI.Button(new Rect(3 * Screen.width / 32, 3 * Screen.height / 16, 3 * Screen.width / 32, Screen.height / 16), "Main menu"))
+		{
+			GameObject[] objects = GameObject.FindObjectsOfType<GameObject>();
+			foreach (GameObject obj in objects) 
+			{
+				Destroy(obj);
+			}
+			
+			Application.LoadLevel(0);
+		}
+		GUI.EndGroup ();
 	}
 
 }

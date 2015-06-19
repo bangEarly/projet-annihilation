@@ -13,6 +13,8 @@ public class StartGame : MonoBehaviour {
 		new Vector3 (55f, 0.5f, -284f)
 	};
 
+	public GameObject ressources;
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -24,6 +26,7 @@ public class StartGame : MonoBehaviour {
 			player.human = true;
 			RessourceManager.SetActualPlayer (player);
 			Camera.main.transform.position = new Vector3(player.transform.position.x, Camera.main.transform.position.y, player.transform.position.z);*/
+			Network.Instantiate (ressources, new Vector3(0,0,0), new Quaternion (0,0,0,0), 0);
 		} 
 		else 
 		{

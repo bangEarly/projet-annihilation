@@ -26,6 +26,8 @@ public class Player : MonoBehaviour {
 
 	public Color teamColor;
 
+    public bool isDead = false, won = false;
+
 	void Awake()
 	{
 		resources = InitResourceList ();
@@ -300,6 +302,11 @@ public class Player : MonoBehaviour {
 	[RPC] void AddToList()
 	{
 		RessourceManager.AddPlayerToList (this);
+	}
+
+	[RPC] void SetDead()
+	{
+		isDead = true;
 	}
 
 }

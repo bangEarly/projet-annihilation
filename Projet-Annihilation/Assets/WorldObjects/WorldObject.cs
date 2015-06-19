@@ -111,7 +111,7 @@ public class WorldObject : MonoBehaviour {
 				{
 					if (player && player.human) 
 					{
-						if (player.teamNumber != owner.teamNumber && CanAttack ()) 
+						if (player.teamNumber != owner.teamNumber && CanAttack () && (!RessourceManager.networkIsConnected() || player.GetComponent<NetworkView>().isMine)) 
 						{
 							BeginAttack (worldObject);
 						}

@@ -15,7 +15,7 @@ public class Worker : Unit {
 	protected override void Start ()
 	{
 		base.Start ();
-		actions = new string[] {"WarFactory", "CrystaliteContainer", "automaticdefense", "powerplant", "QGRobot", "WarFactory_test"};
+		actions = new string[] {"WarFactory", "CrystaliteContainer", "automaticdefense", "powerplant", "QGRobot"};
 	}
 	
 	// Update is called once per frame
