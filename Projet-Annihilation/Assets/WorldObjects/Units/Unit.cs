@@ -39,6 +39,17 @@ public class Unit : WorldObject
 				networkview.RPC("SyncPosition", RPCMode.Others, transform.position);
 			}
 		}
+
+		if (transform.GetComponentInChildren<Renderer> ().isVisible && Input.GetMouseButtonUp (0)) 
+		{
+			Vector3 camPos = Camera.main.WorldToScreenPoint(transform.position);
+			camPos.y = UserInput.InvertMouseY(camPos.y);
+			if (UserInput.selection.Contains(camPos))
+			{
+				SetSelection(true, player.hud.GetPlayingArea());
+				RessourceManager.GetActualPlayer().selectedObjects.Add(this);
+			}
+		}
 	}
 
 	protected override void OnGUI()
@@ -46,7 +57,7 @@ public class Unit : WorldObject
 		base.OnGUI ();
 	}
 
-	public override void SetHoverState(GameObject hoverObject)
+	public override CursorState SetHoverState(GameObject hoverObject)
 	{
 		base.SetHoverState (hoverObject);
 
@@ -54,9 +65,10 @@ public class Unit : WorldObject
 		{
 			if (hoverObject.name == "Ground")
 			{
-				player.hud.SetCursorState(RTS.CursorState.Move);
+				return RTS.CursorState.Move;
 			}
 		}
+		return CursorState.Select;
 	}
 
 	public override void MouseClick(GameObject hitObject, Vector3 hitPoint, Player controller)

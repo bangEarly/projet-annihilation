@@ -1,12 +1,16 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using RTS;
 
 public class UserInput : MonoBehaviour 
 {
 
 	private Player player;
+	public static Vector3 posMouse = -Vector3.one;
+	public static Rect selection = new Rect (0, 0, 0, 0);
 
+	public List<WorldObject> objects = new List<WorldObject>();
 
 	// Use this for initialization
 	void Start () 
@@ -25,10 +29,6 @@ public class UserInput : MonoBehaviour
 			MoveCamera();
 			RotateCamera();
 			MouseActivity(); 
-			if (Input.GetMouseButtonUp(0))
-			{
-				player.test ++;
-			}
 		}
 	}
 
@@ -124,13 +124,52 @@ public class UserInput : MonoBehaviour
 
 	private void MouseActivity() //check if the player clicked
 	{
-		if (Input.GetMouseButtonDown (0)) 
+		if (Input.GetMouseButtonDown (0)) {
+			if (!player.hud.MouseInBounds())
+			{
+				LeftMouseClick();
+			}
+			else
+			{
+				DeselectEverything();
+				posMouse = Input.mousePosition;
+			}
+		}
+		else if (Input.GetMouseButtonUp (0)) 
 		{
-			LeftMouseClick ();
+			if (posMouse != -Vector3.one)
+			{
+				if (Vector3.Distance(posMouse, Input.mousePosition) > 10)
+				{
+					posMouse = -Vector3.one;
+				}
+				else
+				{
+					LeftMouseClick();
+				}
+				posMouse = -Vector3.one;
+			}
 		}
 		else if(Input.GetMouseButtonDown (1))
 		{
 			RightMouseClick();
+		}
+
+		if (Input.GetMouseButton(0))
+		{
+			selection = new Rect (posMouse.x, InvertMouseY(posMouse.y), 
+			                      Input.mousePosition.x - posMouse.x, 
+			                      InvertMouseY(Input.mousePosition.y) - InvertMouseY(posMouse.y));
+			if (selection.width < 0)
+			{
+				selection.x  += selection.width;
+				selection.width = -selection.width;
+			}
+			if (selection.height < 0)
+			{
+				selection.y += selection.height;
+				selection.height = -selection.height;
+			}
 		}
 
 		MouseHover ();
@@ -164,17 +203,21 @@ public class UserInput : MonoBehaviour
 						WorldObject worldObject = hitObject.transform.parent.GetComponent< WorldObject > ();
 						if (worldObject) {
 							if (player.SelectedObject) {
-								player.SelectedObject.SetSelection (false, player.hud.GetPlayingArea ());
-								player.SelectedObject = null;
+								//player.SelectedObject.SetSelection (false, player.hud.GetPlayingArea ());
+								//player.SelectedObject = null;
+								DeselectEverything();
 							}
-							player.SelectedObject = worldObject;
+							//player.SelectedObject = worldObject;
 							worldObject.SetSelection (true, player.hud.GetPlayingArea ());
+							player.selectedObjects.Add(worldObject);
 						}
 					} else {
-						if (player.hud.MouseInBounds () && player.SelectedObject) {
-							player.SelectedObject.SetSelection (false, player.hud.GetPlayingArea ());
-							player.SelectedObject = null;
-						}
+						//if (player.hud.MouseInBounds () && player.SelectedObject) {
+						//	player.SelectedObject.SetSelection (false, player.hud.GetPlayingArea ());
+						//	player.SelectedObject = null;
+						//}
+						DeselectEverything();
+						Debug.Log ("list cleared");
 					}
 				}
 			}
@@ -198,9 +241,12 @@ public class UserInput : MonoBehaviour
 		{
 			player.CancelBuildingPlacement();
 		}
-		else if (player.SelectedObject && player.hud.MouseInBounds () && hitObject && hitPoint != RessourceManager.InvalidPosition)
+		else if (player.selectedObjects.Count > 0 && player.hud.MouseInBounds () && hitObject && hitPoint != RessourceManager.InvalidPosition)
 		{
-			player.SelectedObject.MouseClick(hitObject, hitPoint, player);
+			//player.SelectedObject.MouseClick(hitObject, hitPoint, player);
+			for (int i = 0; i < player.selectedObjects.Count; i++) {
+				player.selectedObjects[i].MouseClick(hitObject, hitPoint, player);
+			}
 		}
 
 	}
@@ -218,9 +264,15 @@ public class UserInput : MonoBehaviour
 				GameObject hoverObject = FindHitObject ();
 				if (hoverObject) 
 				{
-					if (player.SelectedObject) 
+					if (player.selectedObjects.Count > 0) 
 					{
-						player.SelectedObject.SetHoverState (hoverObject);
+						for (int i = 0; i < player.selectedObjects.Count; i++) {
+							if (player.selectedObjects[i].SetHoverState(hoverObject) != CursorState.Select)
+							{
+								player.hud.SetCursorState(player.selectedObjects[i].SetHoverState(hoverObject));
+							}
+						}
+						//player.SelectedObject.SetHoverState (hoverObject);
 					} 
 					else if (hoverObject.name == "Ground") 
 					{
@@ -241,6 +293,19 @@ public class UserInput : MonoBehaviour
 		}
 	}
 
+	public static float InvertMouseY(float y)
+	{
+		return Screen.height - y;
+	}
+
+	public void DeselectEverything()
+	{
+		for (int i = 0; i < player.selectedObjects.Count; i++) {
+			player.selectedObjects[i].SetSelection(false, player.hud.GetPlayingArea());
+		}
+		player.selectedObjects.Clear ();
+	}
+	
 
 
 }
