@@ -16,7 +16,7 @@ public class volume : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	public void setvolume () {
 		onGUI ();
 	}
 }

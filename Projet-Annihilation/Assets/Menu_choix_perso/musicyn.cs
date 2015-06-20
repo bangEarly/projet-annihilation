@@ -2,8 +2,8 @@
 using System.Collections;
 
 public class musicyn : MonoBehaviour {
-	private int ismusic;
-	void onGUI()
+	private bool ismusic;
+	void OnGUI()
 	{
 		Rect rect = new Rect (-120, 40, -135, -115);
 		ismusic = GUI.Toggle (rect, ismusic, "music");
@@ -12,11 +12,15 @@ public class musicyn : MonoBehaviour {
 	void Start () {
 	
 	}
+	public void slider()
+	{
+		OnGUI ();
+	}
 	
 	// Update is called once per frame
-	void Update () {
-		onGUI ();
-		if (ismusic) {
+	public void toggle () {
+		OnGUI ();
+		if (!ismusic) {
 			AudioListener.volume = 0f;
 		}
 	}
