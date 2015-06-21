@@ -9,6 +9,7 @@ public class Player : MonoBehaviour {
 	public bool human;
 	public HUD hud;
 	public WorldObject SelectedObject { get; set; }
+	public List<WorldObject> selectedObjects = new List<WorldObject>();
 
 	public Material notAllowedMaterial, allowedMaterial, inConstructionMaterial;
 
@@ -142,6 +143,7 @@ public class Player : MonoBehaviour {
 			tempBuilding.SetTransparentMaterial (notAllowedMaterial, true);
 			tempBuilding.SetColliders (false);
 			tempBuilding.SetPlayingArea (playingArea);
+			tempBuilding.GetComponent<NavMeshObstacle>().enabled = false;
 		} 
 		else 
 		{
@@ -157,7 +159,7 @@ public class Player : MonoBehaviour {
 	public void FindBuildingLocation()
 	{
 		Vector3 newLocation = WorkManager.FindHitPoint (Input.mousePosition);
-		newLocation.y = 0;
+		newLocation.y = Terrain.activeTerrain.SampleHeight (newLocation);
 		tempBuilding.transform.position = newLocation;
 
 	}
@@ -251,6 +253,7 @@ public class Player : MonoBehaviour {
 
 			tempBuilding.StartConstruction ();
 			tempBuilding.SetTransparentMaterial (inConstructionMaterial, false);
+			tempBuilding.GetComponent<NavMeshObstacle>().enabled = true;
 		}
 		tempCreator.SetBuilding (tempBuilding);
 		float spawnX = tempBuilding.selectionBounds.center.x + tempBuilding.transform.forward.x * tempBuilding.selectionBounds.extents.x + tempBuilding.transform.forward.x * (float)1.5;

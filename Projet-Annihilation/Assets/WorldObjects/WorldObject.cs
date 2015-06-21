@@ -47,6 +47,7 @@ public class WorldObject : MonoBehaviour {
 	{
 		SetPlayer ();
 		networkview = transform.GetComponent<NetworkView> ();
+		buildImage = RessourceManager.GetBuildImage (name);
 	}
 	
 	// Update is called once per frame
@@ -158,7 +159,7 @@ public class WorldObject : MonoBehaviour {
 		GUI.Label (new Rect (selectBox.x, selectBox.y - 9, selectBox.width * healthPercentage, 5), "", healthStyle);
 	}
 
-	public virtual void SetHoverState(GameObject hoverObject)
+	public virtual CursorState SetHoverState(GameObject hoverObject)
 	{
 		if (player && player.human && currentlySelected) 
 		{
@@ -171,21 +172,22 @@ public class WorldObject : MonoBehaviour {
 				{
 					if (owner.teamNumber != player.teamNumber && CanAttack())
 					{
-						player.hud.SetCursorState(CursorState.Attack);
+						return CursorState.Attack;
 					}
 					else 
 					{
-						player.hud.SetCursorState(CursorState.Select);
+						return CursorState.Select;
 					}
 
 				}
 				else 
 				{
-					player.hud.SetCursorState(CursorState.Select);
+					return CursorState.Select;
 				}
 
 			}
 		}
+		return CursorState.Select;
 	}
 
 	public bool IsOwnedBy(Player owner)

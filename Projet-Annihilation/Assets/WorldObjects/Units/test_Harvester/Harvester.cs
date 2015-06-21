@@ -39,7 +39,6 @@ public class Harvester : Unit
 				foreach (Arms arm in arms) {
 					arm.GetComponent<Renderer> ().enabled = true;
 				}
-				Debug.Log(Vector3.Distance(transform.position, resourceDeposit.transform.position));
 				if (harvesting && Vector3.Distance(transform.position, resourceDeposit.transform.position) < 10.0F ) 
 				{
 					Collect ();
@@ -85,7 +84,7 @@ public class Harvester : Unit
 		}
 	}
 
-	public override void SetHoverState(GameObject hoverObject)
+	public override CursorState SetHoverState(GameObject hoverObject)
 	{
 		base.SetHoverState(hoverObject);
 
@@ -96,10 +95,11 @@ public class Harvester : Unit
 				Resource resource = hoverObject.transform.parent.GetComponent<Resource>();
 				if (resource && !resource.isEmpty()) 
 				{
-					player.hud.SetCursorState(CursorState.Harvest);
+					return CursorState.Harvest;
 				}
 			}
 		}
+		return CursorState.Select;
 	}
 
 	public override void MouseClick(GameObject hitObject, Vector3 hitPoint, Player controller)

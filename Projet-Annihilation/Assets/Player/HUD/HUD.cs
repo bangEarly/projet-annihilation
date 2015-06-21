@@ -46,6 +46,8 @@ public class HUD : MonoBehaviour {
 
 	public RenderTexture minimap;
 
+	public Texture2D selectionTexture;
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -91,13 +93,17 @@ public class HUD : MonoBehaviour {
 		{
 			DrawResourceBar ();
 			//DrawMiniMap();
-			if (player.SelectedObject)
+			if (player.selectedObjects.Count == 1)
 			{
 				DrawOrdersBar ();
 				if (notEnoughtResourceTimer > 0)
 				{
 					PrintNotEnoughResource();
 				}
+			}
+			else if (player.selectedObjects.Count > 1)
+			{
+				DrawListBar();
 			}
 			DrawMouseCursor ();
 			if (player.isDead)
@@ -107,6 +113,12 @@ public class HUD : MonoBehaviour {
 			else if (player.won)
 			{
 				ShowVictoryMenu();
+			}
+
+			if (UserInput.posMouse != -Vector3.one)
+			{
+				GUI.color = new Color(1,1,1, 0.5f);
+				GUI.DrawTexture(UserInput.selection, selectionTexture);
 			}
 		}
 
@@ -134,19 +146,19 @@ public class HUD : MonoBehaviour {
 		GUI.BeginGroup(new Rect(Screen.width / 2 - 5, Screen.height - ORDERS_BAR_WIDTH, Screen.width, ORDERS_BAR_WIDTH));
 		GUI.Box (new Rect (0, 0, Screen.width, ORDERS_BAR_WIDTH), "");
 
-		string selectionName = player.SelectedObject.objectName;
-		Building building = player.SelectedObject.GetComponent<Building>();
+		string selectionName = player.selectedObjects[0].name;
+		Building building = player.selectedObjects[0].GetComponent<Building>();
 		//Debug.Log(player.SelectedObject.IsOwnedBy (player));
-		if (player.SelectedObject.IsOwnedBy (player) && ((building && building.isBuilt()) || (!building))) 
+		if (player.selectedObjects[0].IsOwnedBy (player) && ((building && building.isBuilt()) || (!building))) 
 		{
 			//Debug.Log ("caca");
-			if (lastSelection && lastSelection != player.SelectedObject) 
+			if (lastSelection && lastSelection != player.selectedObjects[0]) 
 			{
 				sliderValue = 0.0f;
 			}
 
-			DrawActions (player.SelectedObject.GetActions ());
-			lastSelection = player.SelectedObject;
+			DrawActions (player.selectedObjects[0].GetActions ());
+			lastSelection = player.selectedObjects[0];
 			Building selectedBuilding = lastSelection.GetComponent< Building > ();
 			if (selectedBuilding) 
 			{
@@ -160,7 +172,7 @@ public class HUD : MonoBehaviour {
 			int topPos = buildAreaHeight + BUTTON_SPACING;
 			GUI.Label (new Rect (0, 10, 128, SELECTION_NAME_HEIGHT), selectionName);
 			GUI.DrawTexture(new Rect(0, SELECTION_NAME_HEIGHT, 128, 128), buildFrame);
-			GUI.DrawTexture(new Rect(0, SELECTION_NAME_HEIGHT, 128, 128), player.SelectedObject.buildImage);
+			GUI.DrawTexture(new Rect(0, SELECTION_NAME_HEIGHT, 128, 128), player.selectedObjects[0].buildImage);
 		}
 
 		GUI.EndGroup ();
@@ -173,7 +185,7 @@ public class HUD : MonoBehaviour {
 		bool insideHeight;
 		bool insideWidth;
 
-		if (player.SelectedObject) 
+		if (player.selectedObjects.Count > 0) 
 		{
 			if (mousePos.y >= Screen.height - RESOURCE_BAR_HEIGHT)
 			{
@@ -361,9 +373,9 @@ public class HUD : MonoBehaviour {
 			{
 				if (GUI.Button(pos, action))
 				{
-					if (player.SelectedObject)
+					if (player.selectedObjects[0])
 					{
-						player.SelectedObject.PerformAction(actions[i]);
+						player.selectedObjects[0].PerformAction(actions[i]);
 					}
 				}
 			}
@@ -465,6 +477,27 @@ public class HUD : MonoBehaviour {
 			
 			Application.LoadLevel(0);
 		}
+		GUI.EndGroup ();
+	}
+
+	public void DrawListBar()
+	{
+		GUI.skin = OrdersSkin;
+		GUI.BeginGroup(new Rect(Screen.width / 2 - 5, Screen.height - ORDERS_BAR_WIDTH, Screen.width, ORDERS_BAR_WIDTH));
+		GUI.Box (new Rect (0, 0, Screen.width, ORDERS_BAR_WIDTH), "");
+
+		for (int i = 0; i < player.selectedObjects.Count; i++) 
+		{
+			int column = i % 3;
+			int row = i / 3;
+			Rect pos = GetButtonPos (row, column);
+			//Texture2D texture = RessourceManager.GetBuildImage(player.selectedObjects[i].name);
+			if (player.selectedObjects[i].buildImage)
+			{
+				GUI.DrawTexture(pos, player.selectedObjects[i].buildImage);
+			}
+		}
+
 		GUI.EndGroup ();
 	}
 
